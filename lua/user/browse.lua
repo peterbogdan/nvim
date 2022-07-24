@@ -4,19 +4,12 @@ if not status_ok then
 end
 
 browse.setup {
-  provider = "brave",
+  provider = "google",
 }
 
 local bookmarks = {
-  "https://www.chrisatmachine.com/",
-  "https://github.com/christianchiarulli",
-  "https://github.com/rockerBOO/awesome-neovim",
-  "https://signin.aws.amazon.com/signin",
-  "https://doc.rust-lang.org/book/",
-  "https://aur.archlinux.org/packages/",
-  "https://news.ycombinator.com/",
-  -- "https://github.com/neovim/neovim",
-  -- "https://neovim.discourse.group/",
+  "https://github.com/surface-security",
+  "https://github.com/peterbogdan/nvim",
 }
 
 local function command(name, rhs, opts)

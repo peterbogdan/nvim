@@ -46,8 +46,8 @@ return packer.startup(function(use)
   use "windwp/nvim-autopairs" -- Autopairs, integrates with both cmp and treesitter
   use "numToStr/Comment.nvim"
   use "nvim-lua/popup.nvim"
-  -- use "tiagovla/scope.nvim"
-  -- use "akinsho/bufferline.nvim"
+  use "tiagovla/scope.nvim"
+  use "akinsho/bufferline.nvim"
   use "moll/vim-bbye"
   use "christianchiarulli/lualine.nvim"
   use "akinsho/toggleterm.nvim"
@@ -72,7 +72,7 @@ return packer.startup(function(use)
   use "ThePrimeagen/harpoon"
   use "MattesGroeger/vim-bookmarks"
   -- use "Mephistophiles/surround.nvim"
-  use { "michaelb/sniprun", run = "bash ./install.sh" }
+  use { "michaelb/sniprun", run = "bash ./install.sh 1" }
   use {
 
     "iamcco/markdown-preview.nvim",
@@ -148,7 +148,7 @@ return packer.startup(function(use)
     end,
   }
   use "RRethy/vim-illuminate"
-  -- use "stevearc/aerial.nvim"
+  use "stevearc/aerial.nvim"
   use "j-hui/fidget.nvim"
   -- TODO: set this up
   -- use "rmagatti/goto-preview"
@@ -178,7 +178,6 @@ return packer.startup(function(use)
   use "p00f/nvim-ts-rainbow"
   use "nvim-treesitter/playground"
   use "windwp/nvim-ts-autotag"
-  -- use "drybalka/tree-climber.nvim"
 
   -- Git
   use "lewis6991/gitsigns.nvim"
@@ -194,25 +193,7 @@ return packer.startup(function(use)
   -- use "Pocco81/DAPInstall.nvim"
 
   -- Plugin Graveyard
-  -- use "romgrk/nvim-treesitter-context"
-  -- use "mizlan/iswap.nvim"
-  -- use {'christianchiarulli/nvim-ts-rainbow'}
-  -- use "nvim-telescope/telescope-ui-select.nvim"
-  -- use "nvim-telescope/telescope-file-browser.nvim"
-  -- use 'David-Kunz/cmp-npm' -- doesn't seem to work
-  use { "christianchiarulli/JABS.nvim" }
-  -- use "lunarvim/vim-solidity"
-  -- use "tpope/vim-repeat"
-  -- use "Shatur/neovim-session-manager"
-  -- use "metakirby5/codi.vim"
-  -- use { "nyngwang/NeoZoom.lua", branch = "neo-zoom-original" }
-  -- use "rcarriga/cmp-dap"
-  -- use "filipdutescu/renamer.nvim"
-  -- use "https://github.com/rhysd/conflict-marker.vim"
-  -- use "rebelot/kanagawa.nvim"
-  -- use "unblevable/quick-scope"
-  -- use "tamago324/nlsp-settings.nvim" -- language server settings defined in json for
-  -- use "gbprod/cutlass.nvim"
+  use { "matbme/JABS.nvim" }
 
   -- Automatically set up your configuration after cloning packer.nvim
   -- Put this at the end after all plugins
