@@ -134,7 +134,10 @@ local mappings = {
   --   "Find files",
   -- },
   -- ["F"] = { "<cmd>Telescope live_grep theme=ivy<cr>", "Find Text" },
-  ["P"] = { "<cmd>lua require('telescope').extensions.projects.projects()<cr>", "Projects" },
+  -- ["P"] = { "<cmd>lua require('telescope').extensions.projects.projects()<cr>", "Projects" },
+  ["p"] = { "\"+p", "Paste +" },
+  ["y"] = { "\"+y", "Copy +" },
+  ["Y"] = { "\"+Y", "Copy +" },
   -- ["R"] = { '<cmd>lua require("renamer").rename()<cr>', "Rename" },
   ["z"] = { "<cmd>ZenMode<cr>", "Zen" },
   ["gy"] = "Link",
@@ -148,7 +151,7 @@ local mappings = {
     m = { "<cmd>BrowseMdnSearch<cr>", "Mdn" },
   },
 
-  p = {
+  P = {
     name = "Packer",
     c = { "<cmd>PackerCompile<cr>", "Compile" },
     i = { "<cmd>PackerInstall<cr>", "Install" },
@@ -271,7 +274,8 @@ local mappings = {
       "<cmd>Telescope lsp_workspace_diagnostics<cr>",
       "Workspace Diagnostics",
     },
-    f = { "<cmd>lua vim.lsp.buf.format({ async = true })<cr>", "Format" },
+    -- f = { "<cmd>lua vim.lsp.buf.format({ async = true })<cr>", "Format" },
+    f = { "<cmd>lua vim.lsp.buf.formatting({ async = true })<cr>", "Format" },
     F = { "<cmd>LspToggleAutoFormat<cr>", "Toggle Autoformat" },
     i = { "<cmd>LspInfo<cr>", "Info" },
     h = { "<cmd>IlluminationToggle<cr>", "Toggle Doc HL" },
@@ -358,6 +362,8 @@ local vopts = {
 local vmappings = {
   ["/"] = { '<ESC><CMD>lua require("Comment.api").toggle_linewise_op(vim.fn.visualmode())<CR>', "Comment" },
   s = { "<esc><cmd>'<,'>SnipRun<cr>", "Run range" },
+  ["p"] = { "\"+p", "Paste +" },
+  ["y"] = { "\"+y", "Copy +" },
 }
 
 which_key.setup(setup)

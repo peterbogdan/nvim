@@ -17,11 +17,11 @@ null_ls.setup {
       extra_filetypes = { "toml", "solidity" },
       extra_args = { "--no-semi", "--single-quote", "--jsx-single-quote" },
     },
-    formatting.black.with { extra_args = { "--fast" } },
+    formatting.black, -- .with { extra_args = { "--fast" } },
     formatting.stylua,
     formatting.shfmt,
     formatting.google_java_format,
-    diagnostics.flake8,
+    diagnostics.flake8.with { extra_args = { "--ignore=E741", "--max-line-length=120" } },
     diagnostics.shellcheck,
   },
 }
@@ -44,7 +44,7 @@ local unwrap = {
             col = col,
             end_col = end_col,
             source = "unwrap",
-            message = "hey " .. os.getenv("USER") .. ", don't forget to handle this" ,
+            message = "hey " .. os.getenv "USER" .. ", don't forget to handle this",
             severity = 2,
           })
         end
