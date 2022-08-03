@@ -21,6 +21,7 @@ null_ls.setup {
     formatting.stylua,
     formatting.shfmt,
     formatting.google_java_format,
+    formatting.gofmt,
     diagnostics.flake8.with { extra_args = { "--ignore=E741", "--max-line-length=120" } },
     diagnostics.shellcheck,
   },
