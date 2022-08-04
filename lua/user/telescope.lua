@@ -9,7 +9,6 @@ local icons = require "user.icons"
 
 telescope.setup {
   defaults = {
-
     prompt_prefix = icons.ui.Telescope .. " ",
     selection_caret = " ",
     path_display = { "smart" },
@@ -138,20 +137,15 @@ telescope.setup {
     },
   },
   pickers = {
-    -- Default configuration for builtin pickers goes here:
-    -- picker_name = {
-    --   picker_config_key = value,
-    --   ...
-    -- }
-    -- Now the picker_config_key will be applied every time you call this
-    -- builtin picker
     find_files = {
-      hidden = true
+      additional_args = function()
+        return { "--hidden", "--no-ignore-global" }
+      end,
     },
     live_grep = {
-      additional_args = function(opts)
-        return {"--hidden"}
-          end
+      additional_args = function()
+        return { "--hidden", "--no-ignore-global" }
+      end,
     },
   },
   extensions = {
@@ -164,3 +158,31 @@ telescope.setup {
   },
 }
 
+-- Create :MultiOpen command to open multiple files at once
+local M = {}
+M.multi_open = function(opts)
+  return require("telescope.builtin").find_files(require("telescope.themes").get_dropdown {
+    find_command = opts,
+    attach_mappings = function(prompt_bufnr, map)
+      actions.select_default:replace(function(prompt_bufnr)
+        local state = require "telescope.actions.state"
+        local picker = state.get_current_picker(prompt_bufnr)
+        local multi = picker:get_multi_selection()
+        local single = picker:get_selection()
+        local str = ""
+        if #multi > 0 then
+          for _, j in pairs(multi) do
+            str = str .. "edit " .. j[1] .. " | "
+          end
+        end
+        str = str .. "edit " .. single[1]
+        -- To avoid populating qf or doing ":edit! file", close the prompt first
+        actions.close(prompt_bufnr)
+        vim.api.nvim_command(str)
+      end)
+      return true
+    end,
+  })
+end
+
+return M

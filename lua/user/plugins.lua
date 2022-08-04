@@ -74,7 +74,6 @@ return packer.startup(function(use)
   -- use "Mephistophiles/surround.nvim"
   use { "michaelb/sniprun", run = "bash ./install.sh 1" }
   use {
-
     "iamcco/markdown-preview.nvim",
     run = "cd app && npm install",
     ft = "markdown",

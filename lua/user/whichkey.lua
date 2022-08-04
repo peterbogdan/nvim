@@ -113,7 +113,7 @@ local mappings = {
   -- b = { "<cmd>lua require('user.bfs').open()<cr>", "Buffers" },
   b = {
     "<cmd>lua require('telescope.builtin').buffers(require('telescope.themes').get_dropdown{previewer = false, initial_mode='normal'})<cr>",
-    "Find files",
+    "Search buffers",
   },
   -- b = { "<cmd>JABSOpen<cr>", "Buffers" },
   -- ["b"] = {
@@ -124,6 +124,7 @@ local mappings = {
   ["w"] = { "<cmd>w<CR>", "Write" },
   ["h"] = { "<cmd>nohlsearch<CR>", "No HL" },
   ["q"] = { '<cmd>lua require("user.functions").smart_quit()<CR>', "Quit" },
+  ["m"] = { "<cmd>MarkdownPreviewToggle<CR>", "Markdown preview" },
   ["/"] = { '<cmd>lua require("Comment.api").toggle_current_linewise()<CR>', "Comment" },
   -- ["c"] = { "<cmd>Bdelete!<CR>", "Close Buffer" },
   ["c"] = { "<cmd>Bdelete!<CR>", "Close Buffer" },
@@ -135,9 +136,9 @@ local mappings = {
   -- },
   -- ["F"] = { "<cmd>Telescope live_grep theme=ivy<cr>", "Find Text" },
   -- ["P"] = { "<cmd>lua require('telescope').extensions.projects.projects()<cr>", "Projects" },
-  ["p"] = { "\"+p", "Paste +" },
-  ["y"] = { "\"+y", "Copy +" },
-  ["Y"] = { "\"+Y", "Copy +" },
+  ["p"] = { '"+p', "Paste +" },
+  ["y"] = { '"+y', "Copy +" },
+  ["Y"] = { '"+Y', "Copy +" },
   -- ["R"] = { '<cmd>lua require("renamer").rename()<cr>', "Rename" },
   ["z"] = { "<cmd>ZenMode<cr>", "Zen" },
   ["gy"] = "Link",
@@ -219,8 +220,12 @@ local mappings = {
     b = { "<cmd>Telescope git_branches<cr>", "Checkout branch" },
     c = { "<cmd>Telescope colorscheme<cr>", "Colorscheme" },
     f = {
-      "<cmd>lua require('telescope.builtin').find_files(require('telescope.themes').get_dropdown{previewer = false})<cr>",
+      '<cmd>lua require("user.telescope").multi_open({ "rg", "--files", "--hidden", "--no-ignore-global", })<cr>',
       "Find files",
+    },
+    F = {
+      '<cmd>lua require("user.telescope").multi_open({ "rg", "--files", "--hidden", "--no-ignore", "--no-ignore-files" })<cr>',
+      "Find files (all)",
     },
     t = { "<cmd>Telescope live_grep theme=ivy<cr>", "Find Text" },
     h = { "<cmd>Telescope help_tags<cr>", "Help" },
@@ -362,8 +367,8 @@ local vopts = {
 local vmappings = {
   ["/"] = { '<ESC><CMD>lua require("Comment.api").toggle_linewise_op(vim.fn.visualmode())<CR>', "Comment" },
   s = { "<esc><cmd>'<,'>SnipRun<cr>", "Run range" },
-  ["p"] = { "\"+p", "Paste +" },
-  ["y"] = { "\"+y", "Copy +" },
+  ["p"] = { '"+p', "Paste +" },
+  ["y"] = { '"+y', "Copy +" },
 }
 
 which_key.setup(setup)
