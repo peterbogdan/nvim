@@ -128,7 +128,7 @@ local filetype = {
         .. " "
         .. "%*"
         .. "%#SLFG#"
-        .. vim.api.nvim_buf_get_var(0, "toggle_number")
+        -- .. vim.api.nvim_buf_get_var(0, "toggle_number")
         .. "%*"
       return term
     end
