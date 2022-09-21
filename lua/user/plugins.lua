@@ -43,7 +43,6 @@ return packer.startup(function(use)
   -- My plugins here
   use "wbthomason/packer.nvim" -- Have packer manage itself
   use "nvim-lua/plenary.nvim" -- Useful lua functions used ny lots of plugins
-  use "windwp/nvim-autopairs" -- Autopairs, integrates with both cmp and treesitter
   use "numToStr/Comment.nvim"
   use "nvim-lua/popup.nvim"
   use "tiagovla/scope.nvim"
@@ -56,8 +55,6 @@ return packer.startup(function(use)
   use "lukas-reineke/indent-blankline.nvim"
   use "christianchiarulli/hop.nvim"
   -- use "phaazon/hop.nvim"
-  -- Lua
-  use "kylechui/nvim-surround"
   -- Lua
   use {
     "abecodes/tabout.nvim",
@@ -153,7 +150,7 @@ return packer.startup(function(use)
   -- use "rmagatti/goto-preview"
   use "nvim-lua/lsp_extensions.nvim"
   -- use "christianchiarulli/lsp-inlay-hints"
-  use {"christianchiarulli/lsp-inlayhints.nvim", branch="user-config"}
+  use { "christianchiarulli/lsp-inlayhints.nvim", branch = "user-config" }
 
   -- Java
   use "mfussenegger/nvim-jdtls"
