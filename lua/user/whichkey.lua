@@ -100,10 +100,6 @@ local m_mappings = {
   s = { "<cmd>Telescope harpoon marks<cr>", "Search Files" },
   k = { "<cmd>silent BookmarkPrev<cr>", "Prev" },
   S = { "<cmd>silent BookmarkShowAll<cr>", "Prev" },
-  -- s = {
-  --   "<cmd>lua require('telescope').extensions.vim_bookmarks.all({ hide_filename=false, prompt_title=\"bookmarks\", shorten_path=false })<cr>",
-  --   "Show",
-  -- },
   x = { "<cmd>BookmarkClearAll<cr>", "Clear All" },
   [";"] = { '<cmd>lua require("harpoon.ui").toggle_quick_menu()<cr>', "Harpoon UI" },
 }
@@ -170,25 +166,6 @@ local mappings = {
     t = { '<cmd>lua require("user.functions").toggle_tabline()<cr>', "Tabline" },
   },
 
-  -- s = {
-  --   name = "Split",
-  --   s = { "<cmd>split<cr>", "HSplit" },
-  --   v = { "<cmd>vsplit<cr>", "VSplit" },
-  -- },
-
-  s = {
-    name = "Session",
-    s = { "<cmd>SaveSession<cr>", "Save" },
-    r = { "<cmd>RestoreSession<cr>", "Restore" },
-    x = { "<cmd>DeleteSession<cr>", "Delete" },
-    f = { "<cmd>Autosession search<cr>", "Find" },
-    d = { "<cmd>Autosession delete<cr>", "Find Delete" },
-    -- a = { ":SaveSession<cr>", "test" },
-    -- a = { ":RestoreSession<cr>", "test" },
-    -- a = { ":RestoreSessionFromFile<cr>", "test" },
-    -- a = { ":DeleteSession<cr>", "test" },
-  },
-
   r = {
     name = "Replace",
     r = { "<cmd>lua require('spectre').open()<cr>", "Replace" },
@@ -208,12 +185,6 @@ local mappings = {
     u = { "<cmd>lua require'dapui'.toggle()<cr>", "UI" },
     x = { "<cmd>lua require'dap'.terminate()<cr>", "Exit" },
   },
-
-  -- nnoremap <silent> <leader>B :lua require'dap'.set_breakpoint(vim.fn.input('Breakpoint condition: '))<CR>
-  -- nnoremap <silent> <leader>lp :lua require'dap'.set_breakpoint(nil, nil, vim.fn.input('Log point message: '))<CR>
-  -- require("dapui").open()
-  -- require("dapui").close()
-  -- require("dapui").toggle()
 
   f = {
     name = "Find",
@@ -280,7 +251,7 @@ local mappings = {
       "Workspace Diagnostics",
     },
     -- f = { "<cmd>lua vim.lsp.buf.format({ async = true })<cr>", "Format" },
-    f = { "<cmd>lua vim.lsp.buf.formatting({ async = true })<cr>", "Format" },
+    f = { "<cmd>lua vim.lsp.buf.format({ async = true })<cr>", "Format" },
     F = { "<cmd>LspToggleAutoFormat<cr>", "Toggle Autoformat" },
     i = { "<cmd>LspInfo<cr>", "Info" },
     h = { "<cmd>IlluminationToggle<cr>", "Toggle Doc HL" },
@@ -307,22 +278,7 @@ local mappings = {
     u = { "<cmd>LuaSnipUnlinkCurrent<cr>", "Unlink Snippet" },
   },
 
-  -- s = {
-  --   name = "Surround",
-  --   ["."] = { "<cmd>lua require('surround').repeat_last()<cr>", "Repeat" },
-  --   a = { "<cmd>lua require('surround').surround_add(true)<cr>", "Add" },
-  --   d = { "<cmd>lua require('surround').surround_delete()<cr>", "Delete" },
-  --   r = { "<cmd>lua require('surround').surround_replace()<cr>", "Replace" },
-  --   q = { "<cmd>lua require('surround').toggle_quotes()<cr>", "Quotes" },
-  --   b = { "<cmd>lua require('surround').toggle_brackets()<cr>", "Brackets" },
-  -- },
-
   S = {
-    -- name = "Session",
-    -- s = { "<cmd>SaveSession<cr>", "Save" },
-    -- l = { "<cmd>LoadLastSession!<cr>", "Load Last" },
-    -- d = { "<cmd>LoadCurrentDirSession!<cr>", "Load Last Dir" },
-    -- f = { "<cmd>Telescope sessions save_current=false<cr>", "Find Session" },
     name = "SnipRun",
     c = { "<cmd>SnipClose<cr>", "Close" },
     f = { "<cmd>%SnipRun<cr>", "Run File" },
@@ -366,9 +322,14 @@ local vopts = {
 }
 local vmappings = {
   ["/"] = { '<ESC><CMD>lua require("Comment.api").toggle.linewise(vim.fn.visualmode())<CR>', "Comment" },
-  s = { "<esc><cmd>'<,'>SnipRun<cr>", "Run range" },
+  ["s"] = { "<esc><cmd>'<,'>SnipRun<cr>", "Run range" },
   ["p"] = { '"+p', "Paste +" },
   ["y"] = { '"+y', "Copy +" },
+  ["f"] = { "<cmd>lua vim.lsp.buf.range_formatting()<CR>", "Format range" },
+  g = {
+    name = "Git",
+    ["y"] = "Link",
+  },
 }
 
 which_key.setup(setup)

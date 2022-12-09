@@ -40,21 +40,19 @@ packer.init {
 
 -- Install your plugins here
 return packer.startup(function(use)
-  -- My plugins here
+  -- Deps
   use "wbthomason/packer.nvim" -- Have packer manage itself
   use "nvim-lua/plenary.nvim" -- Useful lua functions used ny lots of plugins
+
   use "numToStr/Comment.nvim"
-  use "nvim-lua/popup.nvim"
   use "tiagovla/scope.nvim"
   use "akinsho/bufferline.nvim"
   use "moll/vim-bbye"
   use "christianchiarulli/lualine.nvim"
   use "akinsho/toggleterm.nvim"
-  use "ahmedkhalf/project.nvim"
   use "lewis6991/impatient.nvim"
   use "lukas-reineke/indent-blankline.nvim"
   use "christianchiarulli/hop.nvim"
-  -- use "phaazon/hop.nvim"
   -- Lua
   use {
     "abecodes/tabout.nvim",
@@ -62,26 +60,21 @@ return packer.startup(function(use)
   }
   use "nacro90/numb.nvim"
   use "monaqa/dial.nvim"
-  -- use "norcalli/nvim-colorizer.lua"
   use "NvChad/nvim-colorizer.lua"
   use "windwp/nvim-spectre"
   use "kevinhwang91/nvim-bqf"
   use "ThePrimeagen/harpoon"
   use "MattesGroeger/vim-bookmarks"
-  -- use "Mephistophiles/surround.nvim"
   use { "michaelb/sniprun", run = "bash ./install.sh 1" }
   use {
     "iamcco/markdown-preview.nvim",
     run = "cd app && npm install",
     ft = "markdown",
   }
-  -- use "stevearc/stickybuf.nvim"
-  use "rmagatti/auto-session"
 
   -- UI
   use "stevearc/dressing.nvim"
   use "ghillb/cybu.nvim"
-  -- use { "christianchiarulli/nvim-gps", branch = "text_hl" }
   use {
     "SmiteshP/nvim-navic",
     requires = "neovim/nvim-lspconfig",
@@ -100,10 +93,10 @@ return packer.startup(function(use)
   use "is0n/jaq-nvim"
 
   -- Colorschemes
-  use "folke/tokyonight.nvim"
-  use "lunarvim/colorschemes" -- A bunch of colorschemes you can try out
   use "lunarvim/darkplus.nvim"
   use "lunarvim/onedarker.nvim"
+  use "ellisonleao/gruvbox.nvim"
+  use "folke/tokyonight.nvim"
 
   -- cmp plugins
   use { "hrsh7th/nvim-cmp" }
@@ -131,65 +124,40 @@ return packer.startup(function(use)
   use "jose-elias-alvarez/null-ls.nvim" -- for formatters and linters
   use "simrat39/symbols-outline.nvim"
   use "ray-x/lsp_signature.nvim"
-  use "b0o/SchemaStore.nvim"
-  use "folke/trouble.nvim"
-  -- use "github/copilot.vim"
-  use {
-    "zbirenbaum/copilot.lua",
-    event = { "VimEnter" },
-    config = function()
-      vim.defer_fn(function()
-        require "user.copilot"
-      end, 100)
-    end,
-  }
-  use "RRethy/vim-illuminate"
-  use "stevearc/aerial.nvim"
-  use "j-hui/fidget.nvim"
-  -- TODO: set this up
-  -- use "rmagatti/goto-preview"
-  use "nvim-lua/lsp_extensions.nvim"
-  -- use "christianchiarulli/lsp-inlay-hints"
-  use { "christianchiarulli/lsp-inlayhints.nvim", branch = "user-config" }
-
-  -- Java
-  use "mfussenegger/nvim-jdtls"
-
-  -- Rust
-  use { "christianchiarulli/rust-tools.nvim", branch = "modularize_and_inlay_rewrite" }
-  use "Saecki/crates.nvim"
-
-  -- Typescript TODO: set this up, also add keybinds to ftplugin
-  use "jose-elias-alvarez/typescript.nvim"
+  use "b0o/SchemaStore.nvim" -- not sure
+  use "folke/trouble.nvim" -- ✅
+  use "j-hui/fidget.nvim" -- UI for nvim-lsp progress ✅
 
   -- Telescope
-  use "nvim-telescope/telescope.nvim"
-  use "tom-anders/telescope-vim-bookmarks.nvim"
-  use "nvim-telescope/telescope-media-files.nvim"
-  use "lalitmee/browse.nvim"
+  use "nvim-telescope/telescope.nvim" -- ✅
 
   -- Treesitter
-  use "nvim-treesitter/nvim-treesitter"
-  use "JoosepAlviste/nvim-ts-context-commentstring"
-  use "p00f/nvim-ts-rainbow"
-  use "nvim-treesitter/playground"
-  use "windwp/nvim-ts-autotag"
+  use "nvim-treesitter/nvim-treesitter" -- ✅
+  --[[ use "JoosepAlviste/nvim-ts-context-commentstring" ]] -- context commenting, don't think its needed
+  --[[ use "nvim-treesitter/playground" ]] -- View treesitter information directly in Neovim!
 
   -- Git
-  use "lewis6991/gitsigns.nvim"
-  use "f-person/git-blame.nvim"
-  use "ruifm/gitlinker.nvim"
-  use "mattn/vim-gist"
-  use "mattn/webapi-vim"
+  use "lewis6991/gitsigns.nvim" -- ✅
+  use "f-person/git-blame.nvim" -- ✅
+  use { "ruifm/gitlinker.nvim", requires = "nvim-lua/plenary.nvim" } -- ✅
+
+  -- Create gist from vim
+  --[[ use "mattn/vim-gist" ]]
+  --[[ use "mattn/webapi-vim" ]]
 
   -- DAP
-  use "mfussenegger/nvim-dap"
-  -- use "theHamsta/nvim-dap-virtual-text"
-  use "rcarriga/nvim-dap-ui"
-  -- use "Pocco81/DAPInstall.nvim"
+  --[[ use "mfussenegger/nvim-dap" ]]
+  --[[ use "rcarriga/nvim-dap-ui" ]]
 
   -- Plugin Graveyard
-  use { "matbme/JABS.nvim" }
+  --[[ use "RRethy/vim-illuminate" -- highlight things under cursor ]]
+  --[[ use "stevearc/aerial.nvim" ]] -- code preview for quick navigation
+  --[[ use { "christianchiarulli/lsp-inlayhints.nvim", branch = "user-config" } ]]
+  --[[ use "nvim-telescope/telescope-media-files.nvim" -- see images in vim ]]
+  --[[ use "lalitmee/browse.nvim" -- browser/ search, not useful ]]
+  --[[ use "windwp/nvim-ts-autotag" ]] -- autoclose and autorename html tag
+  --[[ use "nvim-lua/popup.nvim" ]]
+  --[[ use { "matbme/JABS.nvim" } ]]
 
   -- Automatically set up your configuration after cloning packer.nvim
   -- Put this at the end after all plugins
