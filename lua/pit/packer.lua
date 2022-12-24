@@ -30,11 +30,11 @@ end
 
 -- Have packer use a popup window
 packer.init {
-  display = {
-    open_fn = function()
-      return require("packer.util").float { border = "rounded" }
-    end,
-  },
+    display = {
+        open_fn = function()
+            return require("packer.util").float { border = "rounded" }
+        end,
+    },
 }
 
 -- Have packer use a popup window
@@ -44,7 +44,7 @@ return require('packer').startup(function(use)
     -- Essentials
     use {
         'nvim-telescope/telescope.nvim', tag = '0.1.0',
-        requires = { {'nvim-lua/plenary.nvim'} }
+        requires = { { 'nvim-lua/plenary.nvim' } }
     }
     -- use('ellisonleao/gruvbox.nvim')
     -- use('ellisonleao/gruvbox.nvim')
@@ -55,7 +55,7 @@ return require('packer').startup(function(use)
             vim.cmd('colorscheme gruvbox')
         end
     })
-    use({'nvim-treesitter/nvim-treesitter', run = ':TSUpdate'})
+    use({ 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' })
     use('nvim-treesitter/playground')
     use('mbbill/undotree')
     use('tpope/vim-fugitive')
@@ -64,34 +64,35 @@ return require('packer').startup(function(use)
         'VonHeikemen/lsp-zero.nvim',
         requires = {
             -- LSP Support
-            {'neovim/nvim-lspconfig'},
-            {'williamboman/mason.nvim'},
-            {'williamboman/mason-lspconfig.nvim'},
+            { 'neovim/nvim-lspconfig' },
+            { 'williamboman/mason.nvim' },
+            { 'williamboman/mason-lspconfig.nvim' },
 
             -- Autocompletion
-            {'hrsh7th/nvim-cmp'},
-            {'hrsh7th/cmp-buffer'},
-            {'hrsh7th/cmp-path'},
-            {'saadparwaiz1/cmp_luasnip'},
-            {'hrsh7th/cmp-nvim-lsp'},
-            {'hrsh7th/cmp-nvim-lua'},
+            { 'hrsh7th/nvim-cmp' },
+            { 'hrsh7th/cmp-buffer' },
+            { 'hrsh7th/cmp-path' },
+            { 'saadparwaiz1/cmp_luasnip' },
+            { 'hrsh7th/cmp-nvim-lsp' },
+            { 'hrsh7th/cmp-nvim-lua' },
 
             -- Snippets
-            {'L3MON4D3/LuaSnip'},
-            {'rafamadriz/friendly-snippets'},
+            { 'L3MON4D3/LuaSnip' },
+            { 'rafamadriz/friendly-snippets' },
         }
     }
 
     use('theprimeagen/harpoon') -- quickfix
     use("folke/zen-mode.nvim")
-    use {'akinsho/bufferline.nvim', tag = "v3.*", requires = 'nvim-tree/nvim-web-devicons'}
+    use { 'akinsho/bufferline.nvim', tag = "v3.*", requires = 'nvim-tree/nvim-web-devicons' }
 
     -- Git
     use { "ruifm/gitlinker.nvim", requires = "nvim-lua/plenary.nvim" } -- Open link to current line
-    use("lewis6991/gitsigns.nvim")-- Show Git changes on the left
-    use("f-person/git-blame.nvim")-- Git Blame
+    use("lewis6991/gitsigns.nvim") -- Show Git changes on the left
+    use("f-person/git-blame.nvim") -- Git Blame
     use("folke/which-key.nvim")
-    use ('numToStr/Comment.nvim')
+    use('numToStr/Comment.nvim')
+    use("kyazdani42/nvim-tree.lua")
 
     -- Automatically set up your configuration after cloning packer.nvim
     -- Put this at the end after all plugins

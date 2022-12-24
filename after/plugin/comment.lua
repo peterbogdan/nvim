@@ -10,7 +10,9 @@ comment.setup {
         extra = false,
     },
     pre_hook = function(ctx)
-        print(ctx.type)
+        print(ctx.ctype)
+            local U = require('Comment.utils')
+
         if vim.bo.filetype == 'py' then
             return comment.api.toggle.linewise(ctx)
         end

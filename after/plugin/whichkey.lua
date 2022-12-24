@@ -8,8 +8,7 @@ local setup = {
         marks = true, -- shows a list of your marks on ' and `
         registers = true, -- shows your registers on " in NORMAL or <C-r> in INSERT mode
         spelling = {
-            enabled = true, -- enabling this will show WhichKey when pressing z= to select spelling suggestions
-            suggestions = 20, -- how many suggestions should be shown in the list?
+            enabled = false,
         },
         -- the presets plugin, adds help for a bunch of default keybindings in Neovim
         -- No actual key bindings are created
@@ -17,8 +16,8 @@ local setup = {
             operators = false, -- adds help for operators like d, y, ... and registers them for motion / text object completion
             motions = false, -- adds help for motions
             text_objects = false, -- help for text objects triggered after entering an operator
-            windows = true, -- default bindings on <c-w>
-            nav = true, -- misc bindings to work with windows
+            windows = false, -- default bindings on <c-w>
+            nav = false, -- misc bindings to work with windows
             z = true, -- bindings for folds, spelling and others prefixed with z
             g = true, -- bindings for prefixed with g
         },
@@ -81,22 +80,24 @@ local m_opts = {
 }
 
 local m_mappings = {
-    ["m"] = { '<cmd>lua require("harpoon.mark").add_file()<cr>', "Harpoon" },
+    ["a"] = { '<cmd>lua require("harpoon.mark").add_file()<cr>', "Harpoon" },
     ["."] = { '<cmd>lua require("harpoon.ui").nav_next()<cr>', "Harpoon Next" },
     [","] = { '<cmd>lua require("harpoon.ui").nav_prev()<cr>', "Harpoon Prev" },
     ["s"] = { "<cmd>Telescope harpoon marks<cr>", "Search Files" },
-    [";"] = { '<cmd>lua require("harpoon.ui").toggle_quick_menu()<cr>', "Harpoon UI" },
+    ["u"] = { '<cmd>lua require("harpoon.ui").toggle_quick_menu()<cr>', "Harpoon UI" },
 }
 
 local mappings = {
     ["/"] = { '<cmd>lua require("Comment.api").toggle.linewise.current()<CR>', "Comment" },
     ["w"] = { "<cmd>w<CR>", "Write" },
     ["h"] = { "<cmd>nohlsearch<CR>", "No HL" },
-    ["p"] = "Paste from sys clipboard",
+    ["p"] = {'', "Paste +"},
+
     [" "] = { "<cmd>source $MYVIMRC<CR>", "Reload Config" },
     g = {
         name = 'Git',
         ["y"] = "Open in Git",
+        ["l"] = { "<cmd>GitBlameToggle<cr>", "Blame" },
     },
     l = {
         name = 'LSP',
