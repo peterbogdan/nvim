@@ -1,20 +1,9 @@
 local status_ok, comment = pcall(require, "Comment")
 if not status_ok then
-    print("Comment module not installed!")
-    return
+  print("[Error]Comment not found!")
+  return
 end
+
 comment.setup {
     ignore = '^$',
-    mappings = {
-        basic = false,
-        extra = false,
-    },
-    pre_hook = function(ctx)
-        print(ctx.ctype)
-            local U = require('Comment.utils')
-
-        if vim.bo.filetype == 'py' then
-            return comment.api.toggle.linewise(ctx)
-        end
-    end,
 }
