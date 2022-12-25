@@ -67,12 +67,12 @@ keymap("n", "<C-u>", "<C-u>zz", opts)
 keymap("n", "<tab>", "<cmd>lua require('harpoon.ui').toggle_quick_menu()<cr>", opts)
 
 -- double clipboard
-keymap("x", "<leader>p", [["_dP]], opts)
-keymap("n", "<leader>p", [["+p]], opts)
-keymap("n", "<leader>P", [["+P]], opts)
-keymap("n", "<leader>y", [["+y]], opts)
-keymap("v", "<leader>y", [["+y]], opts)
-keymap("n", "<leader>Y", [["+Y]], opts)
+keymap("x", "<leader>p", '"_dP', opts)
+keymap("n", "<leader>p", '"+p', opts)
+keymap("n", "<leader>P", '"+P', opts)
+keymap("n", "<leader>y", '"+y', opts)
+keymap("v", "<leader>y", '"+y', opts)
+keymap("n", "<leader>Y", '"+Y', opts)
 
 
 keymap("n", "<leader>d", [["_d]], opts)

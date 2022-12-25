@@ -55,11 +55,10 @@ return require('packer').startup(function(use)
             vim.cmd('colorscheme gruvbox')
         end
     })
-    use({ 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' })
+    use({ 'nvim-treesitter/nvim-treesitter', tag = "v0.8.1", run = ':TSUpdate' })
     use('nvim-treesitter/playground')
     use('mbbill/undotree')
     use('tpope/vim-fugitive')
-
     use {
         'VonHeikemen/lsp-zero.nvim',
         requires = {
