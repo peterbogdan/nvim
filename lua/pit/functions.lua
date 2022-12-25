@@ -8,3 +8,11 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   group = highlight_group,
   pattern = '*',
 })
+
+-- [[ Resize Git split window ]]
+vim.api.nvim_create_autocmd('FileType', {
+  callback = function()
+    vim.api.nvim_win_set_width(0, 40)
+  end,
+  pattern = 'fugitive',
+})
