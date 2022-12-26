@@ -122,7 +122,6 @@ mason_lspconfig.setup_handlers {
     }
   end,
 }
-
-vim.diagnostic.config {
+vim.diagnostic.config({
   virtual_text = false,
-}
+})
