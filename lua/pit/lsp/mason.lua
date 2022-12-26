@@ -71,10 +71,12 @@ capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
 --  Add any additional override configuration in the following tables. They will be passed to
 --  the `settings` field of the server config. You must look up that documentation yourself.
 local servers = {
-  -- clangd = {},
-  -- gopls = {},
-  -- rust_analyzer = {},
-  -- tsserver = {},
+  tflint = {
+    cmd = { "tflint" }
+  },
+  gopls = {
+    cmd = { "gopls" },
+  },
   pyright = {
     cmd = { "pyright" },
     settings = {
@@ -121,6 +123,6 @@ mason_lspconfig.setup_handlers {
   end,
 }
 
-vim.diagnostic.config({
+vim.diagnostic.config {
   virtual_text = false,
-})
+}
