@@ -13,6 +13,6 @@ for i = 1, 5 do
   vim.keymap.set("n", string.format("<space>%s", i),
     function()
       require("harpoon.ui").nav_file(i)
-    end
+    end, { desc = "[Harpoon] navigate to file " .. i }
   )
 end

@@ -16,3 +16,7 @@ vim.api.nvim_create_autocmd('FileType', {
   end,
   pattern = 'fugitive',
 })
+
+  vim.api.nvim_create_user_command("TDebug", function(_)
+    require("dapui").toggle()
+  end, { desc = "Open DAP debug ui" })

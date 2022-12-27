@@ -11,7 +11,7 @@
 local opts = { silent = true }
 
 vim.keymap.set({ 'i', 't' }, 'jk', '<ESC>', opts)
-vim.keymap.set({ 'i', 'n', 't' }, "<C-c>", "<C-\\><C-N>", { noremap = true, unpack(opts) })
+vim.keymap.set({ 'i', 'n' }, "<C-c>", "<C-\\><C-N>", { noremap = true, unpack(opts) })
 vim.keymap.set("n", "Q", "<nop>", { noremap = true, unpack(opts) })
 
 
@@ -24,6 +24,7 @@ vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, unpack(opts
 -- Buffer navigation
 vim.keymap.set("n", "<S-l>", ":bnext<CR>", opts)
 vim.keymap.set("n", "<S-h>", ":bprevious<CR>", opts)
+vim.keymap.set("n", "<leader>cc",  ":bp|bd #<CR>", opts) -- Close buffer without messing with splits
 
 -- Search
 vim.keymap.set('n', '<leader>hh', "<cmd> nohlsearch<cr>", opts)
@@ -87,11 +88,11 @@ vim.keymap.set('n', '<leader>/', function()
   })
 end, { desc = '[/] Fuzzily search in current buffer]' })
 
-vim.keymap.set('n', '<leader>sf', require('telescope.builtin').find_files, { desc = '[S]earch [F]iles' })
-vim.keymap.set('n', '<leader>sh', require('telescope.builtin').help_tags, { desc = '[S]earch [H]elp' })
-vim.keymap.set('n', '<leader>sw', require('telescope.builtin').grep_string, { desc = '[S]earch current [W]ord' })
-vim.keymap.set('n', '<leader>sg', require('telescope.builtin').live_grep, { desc = '[S]earch by [G]rep' })
-vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { desc = '[S]earch [D]iagnostics' })
+vim.keymap.set('n', '<leader>sf', require('telescope.builtin').find_files, { desc = '[Telescope] [S]earch [F]iles' })
+vim.keymap.set('n', '<leader>sh', require('telescope.builtin').help_tags, { desc = '[Telescope] [S]earch [H]elp' })
+vim.keymap.set('n', '<leader>sw', require('telescope.builtin').grep_string, { desc = '[Telescope] [S]earch current [W]ord' })
+vim.keymap.set('n', '<leader>sg', require('telescope.builtin').live_grep, { desc = '[Telescope] [S]earch by [G]rep' })
+vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { desc = '[Telescope] [S]earch [D]iagnostics' })
 
 -- [[ Configure Treesitter ]]
 -- See `:help nvim-treesitter`

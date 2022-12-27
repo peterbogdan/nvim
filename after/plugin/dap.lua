@@ -12,7 +12,7 @@
 
 local has_dap, dap = pcall(require, "dap")
 if not has_dap then
-  print("[Error]dap not found!")
+  print "[Error]dap not found!"
   return
 end
 
@@ -41,12 +41,66 @@ require("nvim-dap-virtual-text").setup {
   all_frames = false, -- show virtual text for all stack frames not only current. Only works for debugpy on my machine.
 }
 
--- TODO: How does terminal work?
-dap.defaults.fallback.external_terminal = {
-  command = "/home/peterb/.local/bin/zsh",
-  args = { "-e" },
+-- DAP UI --
+-- You can set trigger characters OR it will default to '.'
+-- You can also trigger with the omnifunc, <c-x><c-o>
+vim.cmd [[
+augroup DapRepl
+  au!
+  au FileType dap-repl lua require('dap.ext.autocompl').attach()
+augroup END
+]]
+
+local dap_ui = require "dapui"
+local _ = dap_ui.setup {
+  layouts = {
+    {
+      elements = {
+        "scopes",
+        "breakpoints",
+        "stacks",
+        "watches",
+      },
+      size = 40,
+      position = "left",
+    },
+    {
+      elements = {
+        "repl",
+        "console",
+      },
+      size = 10,
+      position = "bottom",
+    },
+  },
+  -- -- You can change the order of elements in the sidebar
+  -- sidebar = {
+  --   elements = {
+  --     -- Provide as ID strings or tables with "id" and "size" keys
+  --     {
+  --       id = "scopes",
+  --       size = 0.75, -- Can be float or integer > 1
+  --     },
+  --     { id = "watches", size = 00.25 },
+  --   },
+  --   size = 50,
+  --   position = "left", -- Can be "left" or "right"
+  -- },
+  --
+  -- tray = {
+  --   elements = {},
+  --   size = 15,
+  --   position = "bottom", -- Can be "bottom" or "top"
+  -- },
 }
 
+-- TODO: How does terminal work?
+--[[ dap.defaults.fallback.external_terminal = {
+  command = "/home/peterb/.local/bin/zsh",
+  args = { "-e" },
+} ]]
+
+-- Lua --
 dap.adapters.nlua = function(callback, config)
   callback { type = "server", host = config.host, port = config.port }
 end
@@ -68,7 +122,7 @@ dap.configurations.lua = {
   },
 }
 
-
+-- Go --
 --  https://github.com/mfussenegger/nvim-dap/wiki/Debug-Adapter-installation#go-using-delve-directly
 dap.adapters.go = function(callback, _)
   local stdout = vim.loop.new_pipe(false)
@@ -121,15 +175,6 @@ dap.configurations.go = {
     program = "",
   },
   {
-    type = "go",
-    name = "Debug",
-    request = "launch",
-    program = "${file}",
-    showLog = true,
-    -- console = "externalTerminal",
-    -- dlvToolPath = vim.fn.exepath "dlv",
-  },
-  {
     name = "Test Current File",
     type = "go",
     request = "launch",
@@ -138,83 +183,91 @@ dap.configurations.go = {
     program = ".",
     dlvToolPath = vim.fn.exepath "dlv",
   },
-  {
-    type = "go",
-    name = "Run lsif-clang indexer",
-    request = "launch",
-    showLog = true,
-    program = ".",
-    args = {
-      "--indexer",
-      "lsif-clang compile_commands.json",
-      "--dir",
-      vim.fn.expand "~/sourcegraph/lsif-clang/functionaltest",
-      "--debug",
-    },
-    dlvToolPath = vim.fn.exepath "dlv",
-  },
-  {
-    type = "go",
-    name = "Run lsif-go-imports in smol_go",
-    request = "launch",
-    showLog = true,
-    program = "./cmd/lsif-go",
-    --[[ args = {
-      "--project-root=/home/peterb/sourcegraph/smol_go/",
-      "--repository-root=/home/peterb/sourcegraph/smol_go/",
-      "--module-root=/home/peterb/sourcegraph/smol_go/",
-      "--repository-remote=github.com/peterb/smol_go",
-      "--no-animation",
-    }, ]]
-    dlvToolPath = vim.fn.exepath "dlv",
-  },
-  {
-    type = "go",
-    name = "Run lsif-go-imports in sourcegraph",
-    request = "launch",
-    showLog = true,
-    program = "./cmd/lsif-go",
-    --[[ args = {
-      "--project-root=/home/peterb/sourcegraph/sourcegraph.git/main",
-      "--repository-root=/home/peterb/sourcegraph/sourcegraph.git/main",
-      "--module-root=/home/peterb/sourcegraph/sourcegraph.git/main",
-      "--no-animation",
-    }, ]]
-    dlvToolPath = vim.fn.exepath "dlv",
-  },
 }
 
-dap.configurations.python = {
-  {
-    type = "python",
-    request = "launch",
-    name = "Build api",
-    program = "${file}",
-    args = { "--target", "api" },
-    console = "integratedTerminal",
-  },
-  {
-    type = "python",
-    request = "launch",
-    name = "lsif",
-    program = "src/lsif/__main__.py",
-    args = {},
-    console = "integratedTerminal",
-  },
-}
-
+-- Python --
+dap.configurations.python = {}
 local dap_python = require "dap-python"
-dap_python.setup("python", {
+dap_python.setup("~/.venvs/debugpy/bin/python", {
   -- So if configured correctly, this will open up new terminal.
   --    Could probably get this to target a particular terminal
   --    and/or add a tab to kitty or something like that as well.
   console = "externalTerminal",
-
   include_configs = true,
 })
 
 dap_python.test_runner = "pytest"
+--[[ dap.adapters.python = {
+  type = "executable",
+  command = "~/.venvs/debugpy/bin/python",
+  args = { "-m", "debugpy.adapter" },
+} ]]
 
+local pythonPath = function()
+  -- debugpy supports launching an application with a different interpreter then the one used to launch debugpy itself.
+  -- The code below looks for a `venv` or `.venv` folder in the current directly and uses the python within.
+  -- You could adapt this - to for example use the `VIRTUAL_ENV` environment variable.
+  local cwd = vim.fn.getcwd()
+  local current_env = os.getenv "VIRTUAL_ENV"
+  if current_env then
+    return current_env .. "/bin/python"
+  elseif vim.fn.executable(cwd .. "/venv/bin/python") == 1 then
+    return cwd .. "/venv/bin/python"
+  elseif vim.fn.executable(cwd .. "/.venv/bin/python") == 1 then
+    return cwd .. "/.venv/bin/python"
+  else
+    return "python"
+  end
+end
+
+table.insert(dap.configurations.python, {
+  -- The first three options are required by nvim-dap
+  type = "python", -- the type here established the link to the adapter definition: `dap.adapters.python`
+  request = "launch",
+  name = "Django",
+
+  -- Options below are for debugpy, see https://github.com/microsoft/debugpy/wiki/Debug-configuration-settings for supported options
+  -- "${file}" will launch the current file if used.
+  program = vim.fn.getcwd() .. "/manage.py",
+  pythonPath = pythonPath,
+  args = { "runserver", "--noreload" },
+})
+table.insert(dap.configurations.python, {
+  -- The first three options are required by nvim-dap
+  type = "python", -- the type here established the link to the adapter definition: `dap.adapters.python`
+  request = "launch",
+  name = "Django Command",
+
+  -- Options below are for debugpy, see https://github.com/microsoft/debugpy/wiki/Debug-configuration-settings for supported options
+  -- "${file}" will launch the current file if used.
+  program = function()
+    return vim.fn.getcwd() .. "/manage.py"
+  end,
+  pythonPath = pythonPath,
+  args = function()
+    return { vim.fn.expand("%:t:r"), }
+  end,
+})
+
+table.insert(dap.configurations.python, {
+  -- The first three options are required by nvim-dap
+  type = "python", -- the type here established the link to the adapter definition: `dap.adapters.python`
+  request = "launch",
+  name = "Django Command with args",
+
+  -- Options below are for debugpy, see https://github.com/microsoft/debugpy/wiki/Debug-configuration-settings for supported options
+  -- "${file}" will launch the current file if used.
+  program = function()
+    return vim.fn.getcwd() .. "/manage.py"
+  end,
+  pythonPath = pythonPath,
+  args = function()
+    local args_string = vim.fn.expand("%:t:r") .. vim.fn.input "Arguments: "
+    return vim.split(args_string, " +")
+  end,
+})
+
+-- Rust --
 dap.configurations.rust = {
   {
     name = "Launch",
@@ -251,6 +304,7 @@ dap.configurations.rust = {
   },
 }
 
+-- Mappings --
 local map = function(lhs, rhs, desc)
   if desc then
     desc = "[DAP] " .. desc
@@ -289,59 +343,6 @@ map("<leader>dE", function()
   require("dapui").eval(vim.fn.input "[DAP] Expression > ")
 end)
 
--- You can set trigger characters OR it will default to '.'
--- You can also trigger with the omnifunc, <c-x><c-o>
-vim.cmd [[
-augroup DapRepl
-  au!
-  au FileType dap-repl lua require('dap.ext.autocompl').attach()
-augroup END
-]]
-
-local dap_ui = require "dapui"
-
-local _ = dap_ui.setup {
-  layouts = {
-    {
-      elements = {
-        "scopes",
-        "breakpoints",
-        "stacks",
-        "watches",
-      },
-      size = 40,
-      position = "left",
-    },
-    {
-      elements = {
-        "repl",
-        "console",
-      },
-      size = 10,
-      position = "bottom",
-    },
-  },
-  -- -- You can change the order of elements in the sidebar
-  -- sidebar = {
-  --   elements = {
-  --     -- Provide as ID strings or tables with "id" and "size" keys
-  --     {
-  --       id = "scopes",
-  --       size = 0.75, -- Can be float or integer > 1
-  --     },
-  --     { id = "watches", size = 00.25 },
-  --   },
-  --   size = 50,
-  --   position = "left", -- Can be "left" or "right"
-  -- },
-  --
-  -- tray = {
-  --   elements = {},
-  --   size = 15,
-  --   position = "bottom", -- Can be "bottom" or "top"
-  -- },
-}
-
 local original = {}
 local debug_map = function(lhs, rhs, desc)
   local keymaps = vim.api.nvim_get_keymap "n"
@@ -374,7 +375,7 @@ local debug_unmap = function()
 end
 
 dap.listeners.after.event_initialized["dapui_config"] = function()
-  debug_map("asdf", ":echo 'hello world<CR>", "showing things")
+  debug_map("asdf", ":echo 'hello world'<CR>", "showing things")
 
   dap_ui.open()
 end
