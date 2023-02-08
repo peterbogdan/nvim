@@ -7,6 +7,7 @@
 
 
 " Read the HTML syntax to start with
+print('hello')
 if v:version < 600
   so <sfile>:p:h/html.vim
 else

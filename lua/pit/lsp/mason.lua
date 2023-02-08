@@ -7,6 +7,26 @@ end
 -- Setup mason so it can manage external tooling
 mason.setup()
 
+-- lsp signature help
+local lsp_sig_ok, lsp_signature = pcall(require, "lsp_signature")
+if not lsp_sig_ok then
+  print "[Error]lsp_signature not found!"
+  return
+end
+
+lsp_signature_cfg = {
+  debug = false, -- set to true to enable debug logging
+  log_path = vim.fn.stdpath "cache" .. "/lsp_signature.log", -- log dir when debug is on
+  -- default is  ~/.cache/nvim/lsp_signature.log
+  verbose = false, -- show debug line number
+  bind = true, -- This is mandatory, otherwise border config won't get registered.
+  handler_opts = {
+    border = "rounded", -- double, rounded, single, shadow, none, or a table of borders
+  },
+
+  always_trigger = true, -- sometime show signature on new line or in middle of parameter can be confusing, set it to false for #58
+}
+
 -- Ensure the servers above are installed
 local status_ok, mason_lspconfig = pcall(require, "mason-lspconfig")
 if not status_ok then
@@ -56,6 +76,11 @@ local on_attach = function(_, bufnr)
     vim.lsp.buf.format()
   end, { desc = "Format current buffer with LSP" })
   nmap("<leader>fb", "<cmd>Format<cr>", "[F]format [B]uffer")
+
+  -- signature help
+  if lsp_sig_ok then 
+    lsp_signature.on_attach(lsp_signature_cfg, bufnr)
+  end
 end
 
 -- nvim-cmp supports additional completion capabilities, so broadcast that to servers
@@ -72,7 +97,7 @@ capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
 --  the `settings` field of the server config. You must look up that documentation yourself.
 local servers = {
   tflint = {
-    cmd = { "tflint" }
+    cmd = { "tflint" },
   },
   gopls = {
     cmd = { "gopls" },
@@ -122,6 +147,6 @@ mason_lspconfig.setup_handlers {
     }
   end,
 }
-vim.diagnostic.config({
+vim.diagnostic.config {
   virtual_text = false,
-})
+}

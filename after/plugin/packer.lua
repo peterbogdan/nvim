@@ -26,6 +26,7 @@ require("packer").startup(function(use)
       "folke/neodev.nvim",
     },
   }
+  use { "ray-x/lsp_signature.nvim" } -- persist signature while typing func args
   use "jose-elias-alvarez/null-ls.nvim" -- Formatting
   use { -- Autocompletion
     "hrsh7th/nvim-cmp",
@@ -49,7 +50,9 @@ require("packer").startup(function(use)
   use "tpope/vim-fugitive"
   use "tpope/vim-rhubarb"
   use "lewis6991/gitsigns.nvim"
+  use "f-person/git-blame.nvim"
   use { "ruifm/gitlinker.nvim", requires = "nvim-lua/plenary.nvim" }
+  use { "sindrets/diffview.nvim", requires = "nvim-lua/plenary.nvim" }
 
   -- UI
   use "navarasu/onedark.nvim" -- Theme inspired by Atom
@@ -76,12 +79,14 @@ require("packer").startup(function(use)
   use "jbyuki/one-small-step-for-vimkind"
 
   -- Terminal in a popup
-  use {"akinsho/toggleterm.nvim", tag = '*' }
+  use { "akinsho/toggleterm.nvim", tag = "*" }
 
   use "lukas-reineke/indent-blankline.nvim" -- Add indentation guides even on blank lines
   use "numToStr/Comment.nvim" -- "gc" to comment visual regions/lines
   use "tpope/vim-sleuth" -- Detect tabstop and shiftwidth automatically
   use "mbbill/undotree" -- Undootree file for better undo's
+  use "folke/zen-mode.nvim" -- focus only on one split
+  use "windwp/nvim-spectre" -- search and replace
 
   -- Add custom plugins to packer from ~/.config/nvim/lua/custom/plugins.lua
   local has_plugins, plugins = pcall(require, "custom.plugins")

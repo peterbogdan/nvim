@@ -12,6 +12,8 @@ local opts = { silent = true }
 
 vim.keymap.set({ 'i', 't' }, 'jk', '<ESC>', opts)
 vim.keymap.set({ 'i', 'n' }, "<C-c>", "<C-\\><C-N>", { noremap = true, unpack(opts) })
+vim.keymap.set("n", "<leader>q", "q", { noremap = true, unpack(opts) })
+vim.keymap.set("n", "q", "<nop>", { noremap = true, unpack(opts) }) -- stop recording macros everywhere
 vim.keymap.set("n", "Q", "<nop>", { noremap = true, unpack(opts) })
 
 
@@ -29,6 +31,13 @@ vim.keymap.set("n", "<leader>cc",  ":bp|bd #<CR>", opts) -- Close buffer without
 -- Search
 vim.keymap.set('n', '<leader>hh', "<cmd> nohlsearch<cr>", opts)
 vim.keymap.set("n", "#", "*", opts) -- hate reverse search xD
+vim.keymap.set("n", "n", "nzzzv", opts)
+vim.keymap.set("n", "N", "Nzzzv", opts)
+
+-- Movement
+vim.keymap.set("n", "J", "mzJ`z", opts)
+vim.keymap.set("n", "<C-d>", "<C-d>zz", opts)
+vim.keymap.set("n", "<C-u>", "<C-u>zz", opts)
 
 -- Clipboard --
 -- double clipboard
@@ -76,26 +85,6 @@ vim.keymap.set("n", "<leader>rw", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left>
 
 -- File explorer
 vim.keymap.set("n", "<leader>fe", "<cmd>NvimTreeToggle<cr>", opts)
-
--- See `:help telescope.builtin`
-vim.keymap.set('n', '<leader>?', require('telescope.builtin').oldfiles, { desc = '[?] Find recently opened files' })
-vim.keymap.set('n', '<leader><space>', require('telescope.builtin').buffers, { desc = '[ ] Find existing buffers' })
-vim.keymap.set('n', '<leader>/', function()
-  -- You can pass additional configuration to telescope to change theme, layout, etc.
-  require('telescope.builtin').current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
-    winblend = 10,
-    previewer = false,
-  })
-end, { desc = '[/] Fuzzily search in current buffer]' })
-
-vim.keymap.set('n', '<leader>sf', require('telescope.builtin').find_files, { desc = '[Telescope] [S]earch [F]iles' })
-vim.keymap.set('n', '<leader>sh', require('telescope.builtin').help_tags, { desc = '[Telescope] [S]earch [H]elp' })
-vim.keymap.set('n', '<leader>sw', require('telescope.builtin').grep_string, { desc = '[Telescope] [S]earch current [W]ord' })
-vim.keymap.set('n', '<leader>sg', require('telescope.builtin').live_grep, { desc = '[Telescope] [S]earch by [G]rep' })
-vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { desc = '[Telescope] [S]earch [D]iagnostics' })
-
--- [[ Configure Treesitter ]]
--- See `:help nvim-treesitter`
 
 -- Diagnostic keymaps
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
