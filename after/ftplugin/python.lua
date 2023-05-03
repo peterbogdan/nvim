@@ -3,7 +3,8 @@ local opts = { silent = true }
 -- TODO: remove this
 -- require('dap').set_log_level('TRACE')
 
--- vim.opt.smartindent = true -- default
+vim.opt.smartindent = false
+vim.opt.cindent = false
 vim.opt.autoindent = true
 vim.o.breakindent = false
 vim.o.backspace = [[indent,eol,start]]

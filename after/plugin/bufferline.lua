@@ -78,7 +78,8 @@ bufferline.setup {
   },
   highlights = {
     fill = {
-      fg = { attribute = "fg", highlight = "#ff0000" },
+      -- fg = "#ff0000",
+      fg = "#cc00ff",
       bg = { attribute = "bg", highlight = "TabLine" },
     },
     background = {
@@ -86,10 +87,10 @@ bufferline.setup {
       bg = { attribute = "bg", highlight = "TabLine" },
     },
 
-    -- buffer_selected = {
-    --   fg = {attribute='fg',highlight='#ff0000'},
-    --   bg = {attribute='bg',highlight='#0000ff'},
-    --   },
+    buffer_selected = {
+      fg = "#BB7CD7",
+      bg = {attribute='bg', highlight='Normal'},
+      },
     buffer_visible = {
       fg = { attribute = "fg", highlight = "TabLine" },
       bg = { attribute = "bg", highlight = "TabLine" },

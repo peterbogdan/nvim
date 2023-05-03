@@ -14,21 +14,63 @@ local icons = require "pit.icons"
 
 local tree_cb = nvim_tree_config.nvim_tree_callback
 
-nvim_tree.setup {
+-- local function open_nvim_tree(data)
+--   local IGNORED_FT = {
+--     "startify",
+--     "dashboard",
+--     "alpha",
+--   }
+
+--   -- buffer is a real file on the disk
+--   local real_file = vim.fn.filereadable(data.file) == 1
+
+--   -- buffer is a [No Name]
+--   local no_name = data.file == "" and vim.bo[data.buf].buftype == ""
+
+--   -- &ft
+--   local filetype = vim.bo[data.buf].ft
+
+--   -- only files please
+--   if not real_file and not no_name then
+--     return
+--   end
+
+--   -- skip ignored filetypes
+--   if vim.tbl_contains(IGNORED_FT, filetype) then
+--     return
+--   end
+
+--   -- open the tree but don't focus it
+--   require("nvim-tree.api").tree.toggle({ focus = false })
+-- end
+
+-- vim.api.nvim_create_autocmd({ "VimEnter" }, { callback = open_nvim_tree })
+
+local function on_attach(bufnr)
+  local api = require('nvim-tree.api')
+
+  local function opts(desc)
+    return { desc = 'nvim-tree: ' .. desc, buffer = bufnr, noremap = true, silent = true, nowait = true }
+  end
+  api.config.mappings.default_on_attach(bufnr)
+  -- Mappings migrated from view.mappings.list
+  --
+  -- You will need to insert "your code goes here" for any mappings with a custom action_cb
+  vim.keymap.set('n', 'l', api.node.open.edit, opts('Open'))
+  vim.keymap.set('n', '<CR>', api.node.open.edit, opts('Open'))
+  vim.keymap.set('n', 'o', api.node.open.edit, opts('Open'))
+  vim.keymap.set('n', 'h', api.node.navigate.parent_close, opts('Close Directory'))
+  vim.keymap.set('n', 'v', api.node.open.vertical, opts('Open: Vertical Split'))
+
+end
+
+nvim_tree.setup({
+  on_attach=on_attach,
   hijack_directories = {
     enable = false,
   },
-  -- update_to_buf_dir = {
-  --   enable = false,
-  -- },
   -- disable_netrw = true,
   -- hijack_netrw = true,
-  -- open_on_setup = false,
-  ignore_ft_on_setup = {
-    "startify",
-    "dashboard",
-    "alpha",
-  },
   filters = {
     custom = { --[[ ".git" ]] },
     exclude = { ".gitignore" },
@@ -38,7 +80,7 @@ nvim_tree.setup {
   -- open_on_tab = false,
   -- hijack_cursor = false,
   update_cwd = false,
-  sync_root_with_cwd = false,
+  sync_root_with_cwd = true,
   -- update_to_buf_dir = {
   --   enable = true,
   --   auto_open = true,
@@ -139,4 +181,4 @@ nvim_tree.setup {
     number = false,
     relativenumber = false,
   },
-}
+})

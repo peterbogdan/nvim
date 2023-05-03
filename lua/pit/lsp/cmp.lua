@@ -23,10 +23,10 @@ cmp.setup {
     ["<C-u>"] = cmp.mapping.scroll_docs(-4),
     ["<C-d>"] = cmp.mapping.scroll_docs(4),
     ["<C-Space>"] = cmp.mapping.complete(),
-    ["<CR>"] = cmp.mapping.confirm {
-      behavior = cmp.ConfirmBehavior.Replace,
-      select = true,
-    },
+    -- ["<CR>"] = cmp.mapping.confirm {
+    --   behavior = cmp.ConfirmBehavior.Replace,
+    --   select = true,
+    -- },
     ["<Tab>"] = cmp.mapping(function(fallback)
       if cmp.visible() then
         cmp.select_next_item()
@@ -52,14 +52,19 @@ cmp.setup {
     {
       name = "buffer",
       option = {
+        -- all buffers
         get_bufnrs = function()
+          return vim.api.nvim_list_bufs()
+        end,
+        -- current buffer, max 1 MB
+        --[[ get_bufnrs = function()
           local buf = vim.api.nvim_get_current_buf()
           local byte_size = vim.api.nvim_buf_get_offset(buf, vim.api.nvim_buf_line_count(buf))
           if byte_size > 1024 * 1024 then -- 1 Megabyte max
             return {}
           end
           return { buf }
-        end,
+        end, ]]
       },
     },
   },

@@ -107,8 +107,10 @@ local servers = {
     settings = {
       python = {
         analysis = {
+          autoSearchPaths = true,
           typeCheckingMode = "basic",
           diagnosticMode = "workspace",
+          useLibraryCodeForTypes = true,
           inlayHints = {
             variableTypes = true,
             functionReturnTypes = true,
@@ -117,7 +119,7 @@ local servers = {
       },
     },
   },
-  sumneko_lua = {
+  lua_ls = {
     Lua = {
       workspace = { checkThirdParty = false },
       telemetry = { enable = false },
