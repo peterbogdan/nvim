@@ -116,7 +116,7 @@ nvim_tree.setup({
         git = true,
       },
       glyphs = {
-        default = "",
+        default = "",
         symlink = "",
         folder = {
           arrow_open = icons.ui.ArrowOpen,

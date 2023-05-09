@@ -50,4 +50,4 @@ vim.opt.backup = false
 vim.opt.undodir = os.getenv("HOME") .. "/.vim/undodir"
 vim.opt.undofile = true
 
-
+vim.g.python3_host_prog  = os.getenv("HOME") .. "/.pyenv/shims/python"

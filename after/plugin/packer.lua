@@ -35,7 +35,7 @@ require("packer").startup(function(use)
 
   use { -- Highlight, edit, and navigate code
     "nvim-treesitter/nvim-treesitter",
-    tag = "v0.8.1",
+    tag = "v0.9.0",
     run = function()
       pcall(require("nvim-treesitter.install").update { with_sync = true })
     end,
