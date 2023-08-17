@@ -12,6 +12,7 @@ require("packer").startup(function(use)
   use "wbthomason/packer.nvim"
   use "nvim-lua/plenary.nvim" -- Useful lua functions used ny lots of plugins
 
+  use {'j-hui/fidget.nvim', branch = "legacy"}
   use { -- LSP Configuration & Plugins
     "neovim/nvim-lspconfig",
     requires = {
@@ -58,7 +59,7 @@ require("packer").startup(function(use)
   use "navarasu/onedark.nvim" -- Theme inspired by Atom
   use "nvim-lualine/lualine.nvim" -- Fancier statusline
   use "akinsho/bufferline.nvim"
-  use "kyazdani42/nvim-tree.lua" --
+  use "nvim-tree/nvim-tree.lua" --
 
   -- Navigation
   use "ThePrimeagen/harpoon"

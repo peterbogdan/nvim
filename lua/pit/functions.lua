@@ -44,3 +44,14 @@ end, { desc = "Format current buffer with LSP" })
 --[[ vim.api.nvim_buf_create_user_command(bufnr, "Diff", function(_)
   vim.lsp.buf.format()
 end, { desc = "Format current buffer with LSP" }) ]]
+
+
+vim.api.nvim_create_user_command("ReloadConfig", function(_)
+  for name,_ in pairs(package.loaded) do
+    if name:match('^pit') and not name:match('nvim-tree') then
+      package.loaded[name] = nil
+    end
+  end
+  dofile(vim.env.MYVIMRC)
+  vim.notify("Nvim configuration reloaded!", vim.log.levels.INFO)
+end, { desc = "Reload nvim config" })

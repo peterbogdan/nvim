@@ -13,7 +13,7 @@ end
 tsconfigs.setup {
   disable = true,
   -- Add languages to be installed here that you want installed for treesitter
-  ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'typescript', 'help', 'bash', 'hcl' },
+  ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'typescript', 'help', 'bash', 'hcl', 'terraform' },
 
   highlight = {
     enable = true,

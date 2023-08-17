@@ -119,6 +119,12 @@ local servers = {
       },
     },
   },
+  ruff_lsp = {
+    cmd = { "ruff-lsp" },
+    settings = {
+      args = {},
+    },
+  },
   lua_ls = {
     Lua = {
       workspace = { checkThirdParty = false },
@@ -140,12 +146,6 @@ mason_lspconfig.setup_handlers {
       capabilities = capabilities,
       on_attach = on_attach,
       settings = servers[server_name],
-      --[[ handlers = {
-        ["textDocument/publishDiagnostics"] = vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
-          -- Disable virtual_text
-          virtual_text = true,
-        }),
-      }, ]]
     }
   end,
 }

@@ -4,47 +4,7 @@ if not status_ok then
   return
 end
 
-local config_status_ok, nvim_tree_config = pcall(require, "nvim-tree.config")
-if not config_status_ok then
-  print("[Error]nvim-tree.config not found!")
-  return
-end
-
 local icons = require "pit.icons"
-
-local tree_cb = nvim_tree_config.nvim_tree_callback
-
--- local function open_nvim_tree(data)
---   local IGNORED_FT = {
---     "startify",
---     "dashboard",
---     "alpha",
---   }
-
---   -- buffer is a real file on the disk
---   local real_file = vim.fn.filereadable(data.file) == 1
-
---   -- buffer is a [No Name]
---   local no_name = data.file == "" and vim.bo[data.buf].buftype == ""
-
---   -- &ft
---   local filetype = vim.bo[data.buf].ft
-
---   -- only files please
---   if not real_file and not no_name then
---     return
---   end
-
---   -- skip ignored filetypes
---   if vim.tbl_contains(IGNORED_FT, filetype) then
---     return
---   end
-
---   -- open the tree but don't focus it
---   require("nvim-tree.api").tree.toggle({ focus = false })
--- end
-
--- vim.api.nvim_create_autocmd({ "VimEnter" }, { callback = open_nvim_tree })
 
 local function on_attach(bufnr)
   local api = require('nvim-tree.api')
@@ -170,14 +130,6 @@ nvim_tree.setup({
     hide_root_folder = false,
     side = "left",
     -- auto_resize = true,
-    mappings = {
-      custom_only = false,
-      list = {
-        { key = { "l", "<CR>", "o" }, cb = tree_cb "edit" },
-        { key = "h", cb = tree_cb "close_node" },
-        { key = "v", cb = tree_cb "vsplit" },
-      },
-    },
     number = false,
     relativenumber = false,
   },

@@ -61,37 +61,24 @@ local _ = dap_ui.setup {
         "stacks",
         "watches",
       },
-      size = 40,
+      size = 50,
       position = "left",
     },
     {
       elements = {
-        "repl",
         "console",
+        "repl",
       },
-      size = 10,
+      size = 15,
       position = "bottom",
     },
   },
-  -- -- You can change the order of elements in the sidebar
-  -- sidebar = {
-  --   elements = {
-  --     -- Provide as ID strings or tables with "id" and "size" keys
-  --     {
-  --       id = "scopes",
-  --       size = 0.75, -- Can be float or integer > 1
-  --     },
-  --     { id = "watches", size = 00.25 },
-  --   },
-  --   size = 50,
-  --   position = "left", -- Can be "left" or "right"
-  -- },
-  --
-  -- tray = {
-  --   elements = {},
-  --   size = 15,
-  --   position = "bottom", -- Can be "bottom" or "top"
-  -- },
+  floating = {
+    border = "single",
+    mappings = {
+      close = { "q", "<Esc>" }
+    }
+  },
 }
 
 -- TODO: How does terminal work?
@@ -197,11 +184,6 @@ dap_python.setup("~/.venvs/debugpy/bin/python", {
 })
 
 dap_python.test_runner = "pytest"
---[[ dap.adapters.python = {
-  type = "executable",
-  command = "~/.venvs/debugpy/bin/python",
-  args = { "-m", "debugpy.adapter" },
-} ]]
 
 local pythonPath = function()
   -- debugpy supports launching an application with a different interpreter then the one used to launch debugpy itself.
@@ -220,15 +202,17 @@ local pythonPath = function()
   end
 end
 
+local managePath = function()
+  local manage = vim.fn.findfile('manage.py', '**')
+  return vim.fn.getcwd() .. "/" .. manage
+end,
+
 table.insert(dap.configurations.python, {
   -- The first three options are required by nvim-dap
   type = "python", -- the type here established the link to the adapter definition: `dap.adapters.python`
   request = "launch",
   name = "Django",
-
-  -- Options below are for debugpy, see https://github.com/microsoft/debugpy/wiki/Debug-configuration-settings for supported options
-  -- "${file}" will launch the current file if used.
-  program = vim.fn.getcwd() .. "/manage.py",
+  program = managePath,
   pythonPath = pythonPath,
   args = { "runserver", "--noreload" },
 })
@@ -237,12 +221,7 @@ table.insert(dap.configurations.python, {
   type = "python", -- the type here established the link to the adapter definition: `dap.adapters.python`
   request = "launch",
   name = "Django Command",
-
-  -- Options below are for debugpy, see https://github.com/microsoft/debugpy/wiki/Debug-configuration-settings for supported options
-  -- "${file}" will launch the current file if used.
-  program = function()
-    return vim.fn.getcwd() .. "/manage.py"
-  end,
+  program = managePath,
   pythonPath = pythonPath,
   args = function()
     return { vim.fn.expand("%:t:r"), }
@@ -254,15 +233,10 @@ table.insert(dap.configurations.python, {
   type = "python", -- the type here established the link to the adapter definition: `dap.adapters.python`
   request = "launch",
   name = "Django Command with args",
-
-  -- Options below are for debugpy, see https://github.com/microsoft/debugpy/wiki/Debug-configuration-settings for supported options
-  -- "${file}" will launch the current file if used.
-  program = function()
-    return vim.fn.getcwd() .. "/manage.py"
-  end,
+  program = managePath,
   pythonPath = pythonPath,
   args = function()
-    local args_string = vim.fn.expand("%:t:r") .. vim.fn.input "Arguments: "
+    local args_string = vim.fn.expand("%:t:r") .. " " .. vim.fn.input "Arguments: "
     return vim.split(args_string, " +")
   end,
 })
@@ -322,11 +296,13 @@ map("<leader><F5>", function()
   R("pit.dap").select_rust_runnable()
 end)
 
-map("<leader>dsb", require("dap").step_back, "step_back")
-map("<leader>dsi", require("dap").step_into, "step_into")
-map("<leader>dsov", require("dap").step_over, "step_over")
-map("<leader>dsot", require("dap").step_out, "step_out")
-map("<leader>dsc", require("dap").continue, "continue")
+map("<leader>dsb", dap.step_back, "step_back")
+map("<leader>dsi", dap.step_into, "step_into")
+map("<leader>dsov", dap.step_over, "step_over")
+map("<leader>dsot", dap.step_out, "step_out")
+map("<leader>dsc", dap.continue, "continue")
+-- map("<leader>dvs", require("dap.ext.vscode").run_launchjs, "run vscode launch.json")
+map("<leader>dui", dap_ui.toggle, "toggle dapui")
 
 -- TODO:
 -- disconnect vs. terminate
@@ -374,21 +350,21 @@ local debug_unmap = function()
   original = {}
 end
 
-dap.listeners.after.event_initialized["dapui_config"] = function()
-  debug_map("asdf", ":echo 'hello world'<CR>", "showing things")
+-- dap.listeners.after.event_initialized["dapui_config"] = function()
+--   debug_map("asdf", ":echo 'hello world'<CR>", "showing things")
 
-  dap_ui.open()
-end
+--   dap_ui.open()
+-- end
 
-dap.listeners.before.event_terminated["dapui_config"] = function()
-  debug_unmap()
+-- dap.listeners.before.event_terminated["dapui_config"] = function()
+--   debug_unmap()
 
-  dap_ui.close()
-end
+--   dap_ui.close()
+-- end
 
-dap.listeners.before.event_exited["dapui_config"] = function()
-  dap_ui.close()
-end
+-- dap.listeners.before.event_exited["dapui_config"] = function()
+--   dap_ui.close()
+-- end
 
 local ok, dap_go = pcall(require, "dap-go")
 if ok then
