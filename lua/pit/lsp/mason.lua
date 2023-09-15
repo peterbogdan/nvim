@@ -1,11 +1,11 @@
 local status_ok, mason = pcall(require, "mason")
 if not status_ok then
   print "[Error]mason not found!"
-  return
+else
+  -- Setup mason so it can manage external tooling
+  mason.setup()
 end
 
--- Setup mason so it can manage external tooling
-mason.setup()
 
 -- lsp signature help
 local lsp_sig_ok, lsp_signature = pcall(require, "lsp_signature")
@@ -15,24 +15,22 @@ if not lsp_sig_ok then
 end
 
 lsp_signature_cfg = {
-  debug = false, -- set to true to enable debug logging
-  log_path = vim.fn.stdpath "cache" .. "/lsp_signature.log", -- log dir when debug is on
-  -- default is  ~/.cache/nvim/lsp_signature.log
+  debug = false,
+  log_path = vim.fn.stdpath "cache" .. "/lsp_signature.log",
+  floating_window = false,
+  hint_enable = false,
   verbose = false, -- show debug line number
   bind = true, -- This is mandatory, otherwise border config won't get registered.
   handler_opts = {
-    border = "rounded", -- double, rounded, single, shadow, none, or a table of borders
+    border = "single", -- double, rounded, single, shadow, none, or a table of borders
   },
+  hi_parameter = "IncSearch", -- how your parameter will be highlight
 
-  always_trigger = true, -- sometime show signature on new line or in middle of parameter can be confusing, set it to false for #58
+  always_trigger = false,
+  toggle_key = '<M-;>',
+  select_signature_key='<M-n>' ,
 }
 
--- Ensure the servers above are installed
-local status_ok, mason_lspconfig = pcall(require, "mason-lspconfig")
-if not status_ok then
-  print "[Error]mason-lspconfig not found!"
-  return
-end
 
 local on_attach = function(_, bufnr)
   -- NOTE: Remember that lua is a real programming language, and as such it is possible
@@ -78,14 +76,19 @@ local on_attach = function(_, bufnr)
   nmap("<leader>fb", "<cmd>Format<cr>", "[F]format [B]uffer")
 
   -- signature help
-  if lsp_sig_ok then 
+  if lsp_sig_ok then
     lsp_signature.on_attach(lsp_signature_cfg, bufnr)
   end
 end
 
 -- nvim-cmp supports additional completion capabilities, so broadcast that to servers
 local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
+local cmp_ok, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
+if not cmp_ok then
+  print "[Error] cmp-nvim-lsp not found!"
+else
+  capabilities = cmp_nvim_lsp.default_capabilities(capabilities)
+end
 
 -- LSP settings.
 --  This function gets run when an LSP connects to a particular buffer.
@@ -102,29 +105,6 @@ local servers = {
   gopls = {
     cmd = { "gopls" },
   },
-  pyright = {
-    cmd = { "pyright" },
-    settings = {
-      python = {
-        analysis = {
-          autoSearchPaths = true,
-          typeCheckingMode = "basic",
-          diagnosticMode = "workspace",
-          useLibraryCodeForTypes = true,
-          inlayHints = {
-            variableTypes = true,
-            functionReturnTypes = true,
-          },
-        },
-      },
-    },
-  },
-  ruff_lsp = {
-    cmd = { "ruff-lsp" },
-    settings = {
-      args = {},
-    },
-  },
   lua_ls = {
     Lua = {
       workspace = { checkThirdParty = false },
@@ -136,19 +116,56 @@ local servers = {
   },
 }
 
-mason_lspconfig.setup {
-  ensure_installed = vim.tbl_keys(servers),
-}
-
-mason_lspconfig.setup_handlers {
-  function(server_name)
-    require("lspconfig")[server_name].setup {
-      capabilities = capabilities,
-      on_attach = on_attach,
-      settings = servers[server_name],
+local lsp_ok, lspconfig = pcall(require, "lspconfig")
+if not lsp_ok then
+  print "[Error]lspconfig not found!"
+  return
+end
+-- Ensure the servers above are installed
+local mason_ok, mason_lspconfig = pcall(require, "mason-lspconfig")
+if not mason_ok then
+  print "[Error]mason-lspconfig not found!"
+else
+  mason_lspconfig.setup{
+    ensure_installed = vim.tbl_keys(servers),
+    automatic_installation = true,
+    handlers = {
+      function(server_name)
+        lspconfig[server_name].setup {
+          capabilities = capabilities,
+          on_attach = on_attach,
+          settings = servers[server_name],
+        }
+      end,
+      ["pyright"] = function ()
+          lspconfig.pyright.setup{
+             cmd = { "/Users/peterb/.pyenv/shims/pyright", "--verbose"},
+             settings = {
+               python = {
+                 analysis = {
+                   autoSearchPaths = true,
+                   typeCheckingMode = "basic",
+                   diagnosticMode = "workspace",
+                   useLibraryCodeForTypes = true,
+                   inlayHints = {
+                     variableTypes = true,
+                     functionReturnTypes = true,
+                   },
+                 },
+               },
+             },
+          }
+      end,
+     ["ruff_lsp"] = lspconfig.ruff_lsp.setup{
+       init_options = {
+         settings = {
+           args = {"--verbose"},
+         }
+       }
+      }
     }
-  end,
-}
+  }
+end
 vim.diagnostic.config {
   virtual_text = false,
 }

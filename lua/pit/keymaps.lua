@@ -49,7 +49,15 @@ vim.keymap.set("v", "<leader>y", '"+y', opts)
 vim.keymap.set("n", "<leader>Y", '"+Y', opts)
 vim.keymap.set({ "n", "v", "x" }, "<leader>d", [["_d]], opts)
 
--- Resize with arrows
+-- Move splits quickly in normal mode
+vim.keymap.set({ "n", "i" }, "<A-H>", "<Cmd>wincmd H <CR>", { silent = true })
+vim.keymap.set({ "n", "i", "t" }, "<A-J>", "<Cmd>wincmd J <CR>", { silent = true })
+vim.keymap.set({ "n", "i", "t" }, "<A-K>", "<Cmd>wincmd K <CR>", { silent = true })
+vim.keymap.set({ "n", "i" }, "<A-L>", "<Cmd>wincmd L <CR>", { silent = true })
+
+-- Resize splits quickly in normal mode
+vim.keymap.set({ "n", "i", "t" }, "<A-=>", "<Cmd>wincmd = <CR>", { silent = true })
+vim.keymap.set({ "n", "i", "t" }, "<A-+>", "<Cmd>wincmd | <CR>", { silent = true })
 vim.keymap.set("n", "<m-Up>", ":resize -2<CR>", opts)
 vim.keymap.set("n", "<m-Down>", ":resize +2<CR>", opts)
 vim.keymap.set("n", "<m-Left>", ":vertical resize -2<CR>", opts)
@@ -93,4 +101,12 @@ vim.keymap.set('n', '<leader>te', vim.diagnostic.open_float)
 vim.keymap.set('n', '<leader>tq', vim.diagnostic.setloclist)
 
 vim.keymap.set('n', '<leader>u', vim.cmd.UndotreeToggle)
-vim.keymap.set('n', '<leader>gs', "<cmd> vert Git <cr>")
+
+
+-- debugging
+vim.keymap.set("n",    "<F10>",
+  [[
+    <cmd>echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans<' . synIDattr(synID(line("."),col("."),0),"name") . "> lo<" . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">"<CR>
+  ]],
+    { noremap = true, silent = false }
+)
