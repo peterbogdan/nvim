@@ -24,7 +24,6 @@ end, { desc = "Open DAP debug ui" })
 vim.api.nvim_create_user_command("TFPlan", function(_)
   local Terminal  = require('toggleterm.terminal').Terminal
   local path = vim.fn.expand("%:p:h")
-  print(path)
   Terminal:new {
     cmd = "terraform init -input=false && terraform plan -out=plan.tfplan",
     direction = "tab",
@@ -39,11 +38,11 @@ end, { desc = "Open DAP debug ui" })
 
 vim.api.nvim_create_user_command("W", function(_)
   vim.api.nvim_command('write')
-end, { desc = "Format current buffer with LSP" })
+end, { desc = "add W to save, typoo" })
 
 --[[ vim.api.nvim_buf_create_user_command(bufnr, "Diff", function(_)
   vim.lsp.buf.format()
-end, { desc = "Format current buffer with LSP" }) ]]
+end, { desc = "" }) ]]
 
 
 vim.api.nvim_create_user_command("ReloadConfig", function(_)
@@ -55,3 +54,15 @@ vim.api.nvim_create_user_command("ReloadConfig", function(_)
   dofile(vim.env.MYVIMRC)
   vim.notify("Nvim configuration reloaded!", vim.log.levels.INFO)
 end, { desc = "Reload nvim config" })
+
+vim.api.nvim_create_user_command("CopyFilenameWithoutExtension", function(_)
+  local filename = vim.fn.expand("%:t:r")
+  local clip, err = io.popen('pbcopy','w')
+  if clip then
+    clip:write(filename)
+    clip:close()
+  else
+    io.stderr:write("Error writing to clipboard: " .. err)
+  end
+end, { desc = "Copy current filename to clipboard" })
+

@@ -76,8 +76,8 @@ local _ = dap_ui.setup {
   floating = {
     border = "single",
     mappings = {
-      close = { "q", "<Esc>" }
-    }
+      close = { "q", "<Esc>" },
+    },
   },
 }
 
@@ -202,20 +202,20 @@ local pythonPath = function()
   end
 end
 
-local managePath = function()
-  local manage = vim.fn.findfile('manage.py', '**')
-  return vim.fn.getcwd() .. "/" .. manage
-end,
-
+local managePath =
+  function()
+    local manage = vim.fn.findfile("manage.py", "**")
+    return vim.fn.getcwd() .. "/" .. manage
+  end, 
 table.insert(dap.configurations.python, {
-  -- The first three options are required by nvim-dap
-  type = "python", -- the type here established the link to the adapter definition: `dap.adapters.python`
-  request = "launch",
-  name = "Django",
-  program = managePath,
-  pythonPath = pythonPath,
-  args = { "runserver", "--noreload" },
-})
+    -- The first three options are required by nvim-dap
+    type = "python", -- the type here established the link to the adapter definition: `dap.adapters.python`
+    request = "launch",
+    name = "Django",
+    program = managePath,
+    pythonPath = pythonPath,
+    args = { "runserver", "--noreload" },
+  })
 table.insert(dap.configurations.python, {
   -- The first three options are required by nvim-dap
   type = "python", -- the type here established the link to the adapter definition: `dap.adapters.python`
@@ -224,7 +224,7 @@ table.insert(dap.configurations.python, {
   program = managePath,
   pythonPath = pythonPath,
   args = function()
-    return { vim.fn.expand("%:t:r"), }
+    return { vim.fn.expand "%:t:r" }
   end,
 })
 
@@ -236,7 +236,7 @@ table.insert(dap.configurations.python, {
   program = managePath,
   pythonPath = pythonPath,
   args = function()
-    local args_string = vim.fn.expand("%:t:r") .. " " .. vim.fn.input "Arguments: "
+    local args_string = vim.fn.expand "%:t:r" .. " " .. vim.fn.input "Arguments: "
     return vim.split(args_string, " +")
   end,
 })

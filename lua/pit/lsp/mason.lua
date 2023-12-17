@@ -6,7 +6,6 @@ else
   mason.setup()
 end
 
-
 -- lsp signature help
 local lsp_sig_ok, lsp_signature = pcall(require, "lsp_signature")
 if not lsp_sig_ok then
@@ -27,10 +26,9 @@ lsp_signature_cfg = {
   hi_parameter = "IncSearch", -- how your parameter will be highlight
 
   always_trigger = false,
-  toggle_key = '<M-;>',
-  select_signature_key='<M-n>' ,
+  toggle_key = "<M-;>",
+  select_signature_key = "<M-n>",
 }
-
 
 local on_attach = function(_, bufnr)
   -- NOTE: Remember that lua is a real programming language, and as such it is possible
@@ -121,12 +119,17 @@ if not lsp_ok then
   print "[Error]lspconfig not found!"
   return
 end
+local util_ok, util = pcall(require, "lspconfig.util")
+if not util_ok then
+  print "[Error]lspconfig.util not found!"
+  return
+end
 -- Ensure the servers above are installed
 local mason_ok, mason_lspconfig = pcall(require, "mason-lspconfig")
 if not mason_ok then
   print "[Error]mason-lspconfig not found!"
 else
-  mason_lspconfig.setup{
+  mason_lspconfig.setup {
     ensure_installed = vim.tbl_keys(servers),
     automatic_installation = true,
     handlers = {
@@ -137,33 +140,88 @@ else
           settings = servers[server_name],
         }
       end,
-      ["pyright"] = function ()
-          lspconfig.pyright.setup{
-             cmd = { "/Users/peterb/.pyenv/shims/pyright", "--verbose"},
-             settings = {
-               python = {
-                 analysis = {
-                   autoSearchPaths = true,
-                   typeCheckingMode = "basic",
-                   diagnosticMode = "workspace",
-                   useLibraryCodeForTypes = true,
-                   inlayHints = {
-                     variableTypes = true,
-                     functionReturnTypes = true,
-                   },
-                 },
-               },
-             },
-          }
-      end,
-     ["ruff_lsp"] = lspconfig.ruff_lsp.setup{
-       init_options = {
-         settings = {
-           args = {"--verbose"},
-         }
-       }
-      }
-    }
+      -- ["pylsp"] = function ()
+      -- lspconfig.pylsp.setup {
+      --   -- cmd = { "/Users/peterb/.pyenv/shims/pylsp"},
+      --   root_dir = function(fname)
+      --     local root_files = {
+      --       "pyproject.toml",
+      --       "setup.py",
+      --       "setup.cfg",
+      --       "Pipfile",
+      --       "manage.py",
+      --     }
+      --     return util.root_pattern(unpack(root_files))(fname)
+      --       or   util.find_git_ancestor(fname)
+      --       or   vim.fn.expand("%:p:h")
+      --   end,
+      --   on_attach = on_attach,
+      --   settings = {
+      --     pylsp = {
+      --       plugins = {
+      --         black = {
+      --           cache_config = true,
+      --           enabled = true,
+      --           line_length = 119,
+      --         },
+      --         flake8 = {
+      --           enabled = true,
+      --           maxLineLength = 119,
+      --         },
+      --         mypy = {
+      --           enabled = true,
+      --           dmypy = true,
+      --         },
+      --         pycodestyle = {
+      --           enabled = false,
+      --         },
+      --         pyflakes = {
+      --           enabled = false,
+      --         },
+      --       }
+      --     }
+      --   }
+      -- }
+      -- end,
+      -- ["pyright"] = function()
+      --   lspconfig.pyright.setup {
+      --     -- cmd = { "/Users/peterb/.pyenv/shims/pyright", "--verbose" },
+      --     root_dir = function(fname)
+      --       local root_files = {
+      --         "manage.py",
+      --         "pyproject.toml",
+      --         "setup.py",
+      --         "setup.cfg",
+      --         "Pipfile",
+      --       }
+      --       return util.root_pattern(unpack(root_files))(fname)
+      --         or   util.find_git_ancestor(fname)
+      --         or   vim.fn.expand("%:p:h")
+      --     end,
+      --     settings = {
+      --       python = {
+      --         analysis = {
+      --           autoSearchPaths = true,
+      --           typeCheckingMode = "basic",
+      --           diagnosticMode = "workspace",
+      --           useLibraryCodeForTypes = true,
+      --           inlayHints = {
+      --             variableTypes = true,
+      --             functionReturnTypes = true,
+      --           },
+      --         },
+      --       },
+      --     },
+      --   }
+      -- end,
+      ["ruff_lsp"] = lspconfig.ruff_lsp.setup {
+        init_options = {
+          settings = {
+            args = { "--verbose" },
+          },
+        },
+      },
+    },
   }
 end
 vim.diagnostic.config {
