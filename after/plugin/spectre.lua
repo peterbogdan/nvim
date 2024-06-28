@@ -153,7 +153,7 @@ spectre.setup {
 }
 
 vim.keymap.set("n", "<leader>rr", spectre.open, { desc = "[Spectre] [R]eplace" })
-vim.keymap.set("n", "<leader>rw", function()
-  spectre.open_visual { select_word = true }
-end, { desc = "[Spectre] [R]eplace [W]ord" })
+-- vim.keymap.set("n", "<leader>rw", function()
+--   spectre.open_visual { select_word = true }
+-- end, { desc = "[Spectre] [R]eplace [W]ord" })
 vim.keymap.set('n', "<leader>rb", spectre.open_file_search, { desc = "[Spectre] [R]eplace [B]uffer" })

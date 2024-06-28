@@ -27,7 +27,7 @@ M.select_rust_related = function(bufnr, win)
   bufnr = bufnr or vim.api.nvim_get_current_buf()
   win = win or vim.api.nvim_get_current_win()
 
-  vim.lsp.buf_request(bufnr, "rust-analyzer/relatedTests", vim.lsp.util.make_position_params(win), function(err, result)
+  vim.lsp.buf_request(bufnr, "rust-analyzer/relatedTests", vim.lsp.util.make_position_params(win), function(_, result)
     local runnables = {}
     for _, v in ipairs(result) do
       table.insert(runnables, v.runnable)

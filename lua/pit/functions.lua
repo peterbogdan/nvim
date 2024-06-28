@@ -44,15 +44,19 @@ end, { desc = "add W to save, typoo" })
   vim.lsp.buf.format()
 end, { desc = "" }) ]]
 
-
 vim.api.nvim_create_user_command("ReloadConfig", function(_)
+  local ok, err = pcall(dofile, vim.env.MYVIMRC)
+  if not ok then
+    print("Failed to reload config: " .. err)
+  else
+    print("Configuration reloaded successfully!!", vim.log.levels.INFO)
+  end
   for name,_ in pairs(package.loaded) do
     if name:match('^pit') and not name:match('nvim-tree') then
       package.loaded[name] = nil
+      require(name)
     end
   end
-  dofile(vim.env.MYVIMRC)
-  vim.notify("Nvim configuration reloaded!", vim.log.levels.INFO)
 end, { desc = "Reload nvim config" })
 
 vim.api.nvim_create_user_command("CopyFilenameWithoutExtension", function(_)
@@ -65,4 +69,11 @@ vim.api.nvim_create_user_command("CopyFilenameWithoutExtension", function(_)
     io.stderr:write("Error writing to clipboard: " .. err)
   end
 end, { desc = "Copy current filename to clipboard" })
+
+vim.api.nvim_create_user_command("BufOnly", function(_)
+  --  %bd - Delete all buffers.
+  --  e# - Edit the last buffer in the buffer list (which becomes the current buffer after the previous command).
+  --  bd# - Delete the buffer listed before the last buffer.
+  vim.cmd('%bd|e#|bd#')
+end, { desc = "Close all buffers except this one" })
 

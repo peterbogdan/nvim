@@ -12,9 +12,9 @@ local opts = { silent = true }
 
 vim.keymap.set({ 'i', 't' }, 'jk', '<ESC>', opts)
 vim.keymap.set({ 'i', 'n' }, "<C-c>", "<C-\\><C-N>", { noremap = true, unpack(opts) })
-vim.keymap.set("n", "<leader>q", "q", { noremap = true, unpack(opts) })
-vim.keymap.set("n", "q", "<nop>", { noremap = true, unpack(opts) }) -- stop recording macros everywhere
-vim.keymap.set("n", "Q", "<nop>", { noremap = true, unpack(opts) })
+-- vim.keymap.set("n", "<leader>q", "q", { noremap = true, unpack(opts) })
+-- vim.keymap.set("n", "q", "<nop>", { noremap = true, unpack(opts) }) -- stop recording macros everywhere
+-- vim.keymap.set("n", "Q", "<nop>", { noremap = true, unpack(opts) })
 
 
 vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', opts)
@@ -94,9 +94,21 @@ vim.keymap.set("n", "<leader>rw", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left>
 -- File explorer
 vim.keymap.set("n", "<leader>fe", "<cmd>NvimTreeToggle<cr>", opts)
 
+-- Quickfix movement
+vim.keymap.set('n', '<leader>l', ":lopen<cr>")
+vim.keymap.set('n', '<leader>L', ":lclose<cr>")
+vim.keymap.set('n', '<leader>q', ":copen<cr>")
+vim.keymap.set('n', '<leader>Q', ":cclose<cr>")
+vim.keymap.set('n', '<leader>qn',":cn<cr>")
+vim.keymap.set('n', '<leader>qp',":cp<cr>")
+vim.keymap.set('n', '<leader>te',"")
+vim.keymap.set('n', '<leader>tq',"")
+
 -- Diagnostic keymaps
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
+vim.keymap.set('n', '<leader>dp', vim.diagnostic.goto_prev)
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next)
+vim.keymap.set('n', '<leader>dn', vim.diagnostic.goto_next)
 vim.keymap.set('n', '<leader>te', vim.diagnostic.open_float)
 vim.keymap.set('n', '<leader>tq', vim.diagnostic.setloclist)
 

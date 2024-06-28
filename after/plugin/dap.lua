@@ -173,7 +173,6 @@ dap.configurations.go = {
 }
 
 -- Python --
-dap.configurations.python = {}
 local dap_python = require "dap-python"
 dap_python.setup("~/.venvs/debugpy/bin/python", {
   -- So if configured correctly, this will open up new terminal.
@@ -181,11 +180,12 @@ dap_python.setup("~/.venvs/debugpy/bin/python", {
   --    and/or add a tab to kitty or something like that as well.
   console = "externalTerminal",
   include_configs = true,
+  python = {"python", "-Xfrozen_modules=off"},
 })
 
 dap_python.test_runner = "pytest"
 
-local pythonPath = function()
+local function pythonPath()
   -- debugpy supports launching an application with a different interpreter then the one used to launch debugpy itself.
   -- The code below looks for a `venv` or `.venv` folder in the current directly and uses the python within.
   -- You could adapt this - to for example use the `VIRTUAL_ENV` environment variable.
@@ -202,12 +202,39 @@ local pythonPath = function()
   end
 end
 
-local managePath =
-  function()
+local function managePath()
     local manage = vim.fn.findfile("manage.py", "**")
     return vim.fn.getcwd() .. "/" .. manage
-  end, 
-table.insert(dap.configurations.python, {
+end
+
+local function get_method_or_class()
+  local current_line = vim.fn.getline('.')
+  print("current line: " .. current_line)
+
+  print(current_line)
+  local test_name = nil
+
+  -- Pattern to match Python class or function. Adjust if needed.
+  local class_pattern = '^class%s+(%w+)'
+  local function_pattern = '^def%s+(test_%w+)'
+
+  if current_line:match(class_pattern) then
+    -- If the current line defines a class, extract the class name
+    test_name = current_line:match(class_pattern)
+  elseif current_line:match(function_pattern) then
+    -- If the current line defines a function, extract the function name
+    test_name = current_line:match(function_pattern)
+  else
+    -- If the cursor is not on a direct test function or class line,
+    -- You could implement additional logic to find the nearest test
+    print('No test class or method found at cursor!')
+    return
+  end
+  return test_name
+end
+
+dap.configurations.python = {
+  {
     -- The first three options are required by nvim-dap
     type = "python", -- the type here established the link to the adapter definition: `dap.adapters.python`
     request = "launch",
@@ -215,31 +242,54 @@ table.insert(dap.configurations.python, {
     program = managePath,
     pythonPath = pythonPath,
     args = { "runserver", "--noreload" },
-  })
-table.insert(dap.configurations.python, {
-  -- The first three options are required by nvim-dap
-  type = "python", -- the type here established the link to the adapter definition: `dap.adapters.python`
-  request = "launch",
-  name = "Django Command",
-  program = managePath,
-  pythonPath = pythonPath,
-  args = function()
-    return { vim.fn.expand "%:t:r" }
-  end,
-})
-
-table.insert(dap.configurations.python, {
-  -- The first three options are required by nvim-dap
-  type = "python", -- the type here established the link to the adapter definition: `dap.adapters.python`
-  request = "launch",
-  name = "Django Command with args",
-  program = managePath,
-  pythonPath = pythonPath,
-  args = function()
-    local args_string = vim.fn.expand "%:t:r" .. " " .. vim.fn.input "Arguments: "
-    return vim.split(args_string, " +")
-  end,
-})
+  },
+  {
+    -- The first three options are required by nvim-dap
+    type = "python", -- the type here established the link to the adapter definition: `dap.adapters.python`
+    request = "launch",
+    name = "Django Command",
+    program = managePath,
+    pythonPath = pythonPath,
+    args = function()
+      return { vim.fn.expand "%:t:r" }
+    end,
+  },
+  {
+    -- The first three options are required by nvim-dap
+    type = "python", -- the type here established the link to the adapter definition: `dap.adapters.python`
+    request = "launch",
+    name = "Django Command with args",
+    program = managePath,
+    pythonPath = pythonPath,
+    args = function()
+      local args_string = vim.fn.expand "%:t:r" .. " " .. vim.fn.input "Arguments: "
+      return vim.split(args_string, " +")
+    end,
+  },
+  {
+    -- The first three options are required by nvim-dap
+    type = "python", -- the type here established the link to the adapter definition: `dap.adapters.python`
+    request = "launch",
+    name = "pytest",
+    module = 'pytest',
+    python = {pythonPath, "-Xfrozen_modules=off"},
+    cwd = "${workspaceFolder}",
+    args = function()
+      local args_string = vim.fn.expand "%:t:r" .. " " .. vim.fn.input "Arguments: "
+      return vim.split(args_string, " +")
+    end,
+  },
+  {
+    -- The first three options are required by nvim-dap
+    type = "python", -- the type here established the link to the adapter definition: `dap.adapters.python`
+    request = "launch",
+    name = "pytest under cursor",
+    module = 'pytest',
+    python = {pythonPath, "-Xfrozen_modules=off"},
+    cwd = "${workspaceFolder}",
+    args = {"-k", "test_command"},
+  },
+}
 
 -- Rust --
 dap.configurations.rust = {
@@ -319,36 +369,36 @@ map("<leader>dE", function()
   require("dapui").eval(vim.fn.input "[DAP] Expression > ")
 end)
 
-local original = {}
-local debug_map = function(lhs, rhs, desc)
-  local keymaps = vim.api.nvim_get_keymap "n"
-  original[lhs] = vim.tbl_filter(function(v)
-    return v.lhs == lhs
-  end, keymaps)[1] or true
+-- local original = {}
+-- local debug_map = function(lhs, rhs, desc)
+--   local keymaps = vim.api.nvim_get_keymap "n"
+--   original[lhs] = vim.tbl_filter(function(v)
+--     return v.lhs == lhs
+--   end, keymaps)[1] or true
 
-  vim.keymap.set("n", lhs, rhs, { desc = desc })
-end
+--   vim.keymap.set("n", lhs, rhs, { desc = desc })
+-- end
 
-local debug_unmap = function()
-  for k, v in pairs(original) do
-    if v == true then
-      vim.keymap.del("n", k)
-    else
-      local rhs = v.rhs
+-- local debug_unmap = function()
+--   for k, v in pairs(original) do
+--     if v == true then
+--       vim.keymap.del("n", k)
+--     else
+--       local rhs = v.rhs
 
-      v.lhs = nil
-      v.rhs = nil
-      v.buffer = nil
-      v.mode = nil
-      v.sid = nil
-      v.lnum = nil
+--       v.lhs = nil
+--       v.rhs = nil
+--       v.buffer = nil
+--       v.mode = nil
+--       v.sid = nil
+--       v.lnum = nil
 
-      vim.keymap.set("n", k, rhs, v)
-    end
-  end
+--       vim.keymap.set("n", k, rhs, v)
+--     end
+--   end
 
-  original = {}
-end
+--   original = {}
+-- end
 
 -- dap.listeners.after.event_initialized["dapui_config"] = function()
 --   debug_map("asdf", ":echo 'hello world'<CR>", "showing things")

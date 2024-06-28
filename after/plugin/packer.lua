@@ -12,7 +12,7 @@ require("packer").startup(function(use)
   use "wbthomason/packer.nvim"
   use "nvim-lua/plenary.nvim" -- Useful lua functions used ny lots of plugins
 
-  use {'j-hui/fidget.nvim', tag = "legacy"}
+  use { "j-hui/fidget.nvim", tag = "legacy" }
   use { -- LSP Configuration & Plugins
     "neovim/nvim-lspconfig",
     requires = {
@@ -70,10 +70,25 @@ require("packer").startup(function(use)
 
   -- Debug adapter protocol
   use "mfussenegger/nvim-dap"
-  use "rcarriga/nvim-dap-ui"
+  use {"rcarriga/nvim-dap-ui", requires = {"nvim-neotest/nvim-nio"} }
   use "theHamsta/nvim-dap-virtual-text"
   use "nvim-telescope/telescope-dap.nvim"
 
+  -- Testing
+  use {
+    "nvim-neotest/neotest",
+    requires = {
+      "nvim-lua/plenary.nvim",
+      "antoinemadec/FixCursorHold.nvim",
+      "nvim-treesitter/nvim-treesitter",
+    },
+  }
+  use {
+    "nvim-neotest/neotest-python",
+    requires = {
+      "nvim-neotest/neotest",
+    },
+  }
   --  Adaparter configuration for specific languages
   use { "leoluz/nvim-dap-go" }
   use { "mfussenegger/nvim-dap-python" }
