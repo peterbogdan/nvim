@@ -214,13 +214,13 @@ else
       --     },
       --   }
       -- end,
-      ["ruff_lsp"] = lspconfig.ruff_lsp.setup {
-        init_options = {
-          settings = {
-            args = { "--verbose" },
-          },
-        },
-      },
+      -- ["ruff"] = lspconfig.ruff.setup {
+      --   init_options = {
+      --     settings = {
+      --       args = { "--verbose" },
+      --     },
+      --   },
+      -- },
     },
   }
 end
